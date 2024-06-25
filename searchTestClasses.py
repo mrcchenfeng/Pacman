@@ -1,15 +1,13 @@
 # searchTestClasses.py
 # --------------------
-# Licensing Information:  You are free to use or extend these projects for
-# educational purposes provided that (1) you do not distribute or publish
-# solutions, (2) you retain this notice, and (3) you provide clear
-# attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
+#许可信息:您可以出于教育目的自由使用或扩展这些项目,前提是
+# (1)您不散发或发布解决方案,
+# (2)您保留本声明,以及
+# (3)您提供明确的加州大学伯克利分校归属,包括指向 http://ai.berkeley.edu 的链接.
 # 
-# Attribution Information: The Pacman AI projects were developed at UC Berkeley.
-# The core projects and autograders were primarily created by John DeNero
-# (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
-# Student side autograding was added by Brad Miller, Nick Hay, and
-# Pieter Abbeel (pabbeel@cs.berkeley.edu).
+# 归属信息:吃豆人AI项目是在加州大学伯克利分校开发的.
+# 核心项目和自动评分器主要由John DeNero(denero@cs.berkeley.edu)和Dan Klein(klein@cs.berkeley.edu)创建.
+# 学生端自动评分由Brad Miller、Nick Hay和Pieter Abbeel(pabbeel@cs.berkeley.edu)添加.
 
 
 import sys
@@ -17,12 +15,12 @@ import re
 import testClasses
 import textwrap
 
-# import project specific code
+# 导入特定于项目的代码
 import layout
 import pacman
 from search import SearchProblem
 
-# helper function for printing solutions in solution files
+# 用于在解决方案文件中打印解决方案的帮助程序函数
 def wrap_solution(solution):
     if type(solution) == type([]):
         return '\n'.join(textwrap.wrap(' '.join(solution)))
@@ -51,24 +49,24 @@ def checkSolution(problem, path):
     state = followAction(state, action, problem)
   return problem.isGoalState(state)
 
-# Search problem on a plain graph
+# 在纯图上搜索问题
 class GraphSearch(SearchProblem):
 
-    # Read in the state graph; define start/end states, edges and costs
+    # 读取状态图;定义开始/结束状态、边和成本
     def __init__(self, graph_text):
         self.expanded_states = []
         lines = graph_text.split('\n')
         r = re.match('start_state:(.*)', lines[0])
         if r == None:
-            print("Broken graph:")
+            print("破碎的图形:")
             print('"""%s"""' % graph_text)
-            raise Exception("GraphSearch graph specification start_state not found or incorrect on line 0")
+            raise Exception("GraphSearch 图形规范 start_state 找不到或在第 0 行不正确")
         self.start_state = r.group(1).strip()
         r = re.match('goal_states:(.*)', lines[1])
         if r == None:
-            print("Broken graph:")
+            print("破碎的图形:")
             print('"""%s"""' % graph_text)
-            raise Exception("GraphSearch graph specification goal_states not found or incorrect on line 1")
+            raise Exception("在第 1 行找不到 GraphSearch 图形规范或goal_states不正确")
         goals = r.group(1).split()
         self.goals = [str.strip(g) for g in goals]
         self.successors = {}
@@ -81,9 +79,9 @@ class GraphSearch(SearchProblem):
             elif len(l.split()) == 4:
                 start, action, next_state, cost = l.split()
             else:
-                print("Broken graph:")
+                print("破碎的图形:")
                 print('"""%s"""' % graph_text)
-                raise Exception("Invalid line in GraphSearch graph specification on line:" + l)
+                raise Exception("GraphSearch 在线图形规范中的无效行:" + l)
             cost = float(cost)
             self.orderedSuccessorTuples.append((start, action, next_state, cost))
             all_states.add(start)
@@ -95,20 +93,20 @@ class GraphSearch(SearchProblem):
             if s not in self.successors:
                 self.successors[s] = []
 
-    # Get start state
+    # 获取开始状态
     def getStartState(self):
         return self.start_state
 
-    # Check if a state is a goal state
+    # 检查状态是否为目标状态
     def isGoalState(self, state):
         return state in self.goals
 
-    # Get all successors of a state
+    # 获取状态的所有继承者
     def getSuccessors(self, state):
         self.expanded_states.append(state)
         return list(self.successors[state])
 
-    # Calculate total cost of a sequence of actions
+    # 计算一系列操作的总成本
     def getCostOfActions(self, actions):
         total_cost = 0
         state = self.start_state
@@ -121,11 +119,11 @@ class GraphSearch(SearchProblem):
                     total_cost += cost
                     match = True
             if not match:
-                print('invalid action sequence')
+                print('无效的操作序列')
                 sys.exit(1)
         return total_cost
 
-    # Return a list of all states on which 'getSuccessors' was called
+    # 返回调用“getSuccessors”的所有状态的列表
     def getExpandedStates(self):
         return self.expanded_states
 
@@ -144,9 +142,9 @@ def parseHeuristic(heuristicText):
     for line in heuristicText.split('\n'):
         tokens = line.split()
         if len(tokens) != 2:
-            print("Broken heuristic:")
+            print("破碎的启发式:")
             print('"""%s"""' % heuristicText)
-            raise Exception("GraphSearch heuristic specification broken at tokens:" + str(tokens))
+            raise Exception("GraphSearch 启发式规范在令牌处被破坏:" + str(tokens))
         state, h = tokens
         heuristic[state] = float(h)
 
@@ -156,9 +154,9 @@ def parseHeuristic(heuristicText):
         else:
             import pprint
             pp = pprint.PrettyPrinter(indent=4)
-            print("Heuristic:")
+            print("启发式:")
             pp.pprint(heuristic)
-            raise Exception("Graph heuristic called with invalid state: " + str(state))
+            raise Exception("以无效状态调用的图启发式: " + str(state))
 
     return graphHeuristic
 
@@ -176,7 +174,7 @@ class GraphSearchTest(testClasses.TestCase):
         else:
             self.heuristic = None
 
-    # Note that the return type of this function is a tripple:
+    # 请注意,此函数的返回类型是 tripple:
     # (solution, expanded states, error message)
     def getSolInfo(self, search):
         alg = getattr(search, self.alg)
@@ -191,9 +189,9 @@ class GraphSearchTest(testClasses.TestCase):
 
         return solution, problem.getExpandedStates(), None
 
-    # Run student code.  If an error message is returned, print error and return false.
-    # If a good solution is returned, printn the solution and return true; otherwise,
-    # print both the correct and student's solution and return false.
+    #运行学生代码. 如果返回错误消息,请打印错误并返回 false.
+    #如果返回一个好的解决方案,则打印该解决方案并返回 true;否则
+    #打印 Correct 和 Student's Solution 并返回 False.
     def execute(self, grades, moduleDict, solutionDict):
         search = moduleDict['search']
         searchAgents = moduleDict['searchAgents']
@@ -228,26 +226,26 @@ class GraphSearchTest(testClasses.TestCase):
     def writeSolution(self, moduleDict, filePath):
         search = moduleDict['search']
         searchAgents = moduleDict['searchAgents']
-        # open file and write comments
+        # 打开文件并写注释
         handle = open(filePath, 'w')
         handle.write('# This is the solution file for %s.\n' % self.path)
         handle.write('# This solution is designed to support both right-to-left\n')
         handle.write('# and left-to-right implementations.\n')
 
-        # write forward solution
+        # 前向写入解决方案
         solution, expanded_states, error = self.getSolInfo(search)
         if error != None: raise Exception("Error in solution code: %s" % error)
         handle.write('solution: "%s"\n' % ' '.join(solution))
         handle.write('expanded_states: "%s"\n' % ' '.join(expanded_states))
 
-        # reverse and write backwards solution
+        # 反向和向后写入解决方案
         search.REVERSE_PUSH = not search.REVERSE_PUSH
         solution, expanded_states, error = self.getSolInfo(search)
         if error != None: raise Exception("Error in solution code: %s" % error)
         handle.write('rev_solution: "%s"\n' % ' '.join(solution))
         handle.write('rev_expanded_states: "%s"\n' % ' '.join(expanded_states))
 
-        # clean up
+        # 清理
         search.REVERSE_PUSH = not search.REVERSE_PUSH
         handle.close()
         return True
@@ -262,7 +260,7 @@ class PacmanSearchTest(testClasses.TestCase):
         self.alg = testDict['algorithm']
         self.layoutName = testDict['layoutName']
 
-        # TODO: sensible to have defaults like this?
+        # TODO: 像这样设置默认值是合理的吗？
         self.leewayFactor = float(testDict.get('leewayFactor', '1'))
         self.costFn = eval(testDict.get('costFn', 'None'))
         self.searchProblemClassName = testDict.get('searchProblemClass', 'PositionSearchProblem')
@@ -310,7 +308,7 @@ class PacmanSearchTest(testClasses.TestCase):
             grades.addMessage('%s' % error)
             return False
 
-        # FIXME: do we want to standardize test output format?
+        # FIXME:我们是否要标准化测试输出格式？
 
         if solution not in gold_solution:
             grades.addMessage('FAIL: %s' % self.path)
@@ -342,27 +340,27 @@ class PacmanSearchTest(testClasses.TestCase):
     def writeSolution(self, moduleDict, filePath):
         search = moduleDict['search']
         searchAgents = moduleDict['searchAgents']
-        # open file and write comments
+        # 打开文件并写注释
         handle = open(filePath, 'w')
         handle.write('# This is the solution file for %s.\n' % self.path)
         handle.write('# This solution is designed to support both right-to-left\n')
         handle.write('# and left-to-right implementations.\n')
         handle.write('# Number of nodes expanded must be with a factor of %s of the numbers below.\n' % self.leewayFactor)
 
-        # write forward solution
+        # 前向写入解决方案
         solution, expanded, error = self.getSolInfo(search, searchAgents)
         if error != None: raise Exception("Error in solution code: %s" % error)
         handle.write('solution: """\n%s\n"""\n' % wrap_solution(solution))
         handle.write('expanded_nodes: "%s"\n' % expanded)
 
-        # write backward solution
+        # 向后写解决方案
         search.REVERSE_PUSH = not search.REVERSE_PUSH
         solution, expanded, error = self.getSolInfo(search, searchAgents)
         if error != None: raise Exception("Error in solution code: %s" % error)
         handle.write('rev_solution: """\n%s\n"""\n' % wrap_solution(solution))
         handle.write('rev_expanded_nodes: "%s"\n' % expanded)
 
-        # clean up
+        # 清理
         search.REVERSE_PUSH = not search.REVERSE_PUSH
         handle.close()
         return True
@@ -370,7 +368,7 @@ class PacmanSearchTest(testClasses.TestCase):
 
 from game import Actions
 def getStatesFromPath(start, path):
-    "Returns the list of states visited along the path"
+    "返回沿路径访问的状态列表"
     vis = [start]
     curr = start
     for a in path:
@@ -434,7 +432,7 @@ class CornerProblemTest(testClasses.TestCase):
     def writeSolution(self, moduleDict, filePath):
         search = moduleDict['search']
         searchAgents = moduleDict['searchAgents']
-        # open file and write comments
+        # 打开文件并写注释
         handle = open(filePath, 'w')
         handle.write('# This is the solution file for %s.\n' % self.path)
 
@@ -451,7 +449,7 @@ class CornerProblemTest(testClasses.TestCase):
 
 
 
-# template = """class: "HeuristicTest"
+# 模板 = """class: "HeuristicTest"
 #
 # heuristic: "foodHeuristic"
 # searchProblemClass: "FoodSearchProblem"
@@ -528,7 +526,7 @@ class HeuristicTest(testClasses.TestCase):
     def writeSolution(self, moduleDict, filePath):
         search = moduleDict['search']
         searchAgents = moduleDict['searchAgents']
-        # open file and write comments
+        # 打开文件并写注释
         handle = open(filePath, 'w')
         handle.write('# This is the solution file for %s.\n' % self.path)
 
@@ -613,7 +611,7 @@ class HeuristicGrade(testClasses.TestCase):
 
 
 
-# template = """class: "ClosestDotTest"
+# 模板 = """class: "ClosestDotTest"
 #
 # layoutName: "Test %s"
 # layout: \"\"\"
@@ -667,7 +665,7 @@ class ClosestDotTest(testClasses.TestCase):
     def writeSolution(self, moduleDict, filePath):
         search = moduleDict['search']
         searchAgents = moduleDict['searchAgents']
-        # open file and write comments
+        # 打开文件并写注释
         handle = open(filePath, 'w')
         handle.write('# This is the solution file for %s.\n' % self.path)
 
@@ -742,13 +740,13 @@ class CornerHeuristicSanity(testClasses.TestCase):
     def writeSolution(self, moduleDict, filePath):
         search = moduleDict['search']
         searchAgents = moduleDict['searchAgents']
-        # write comment
+        # 写注释
         handle = open(filePath, 'w')
         handle.write('# In order for a heuristic to be admissible, the value\n')
         handle.write('# of the heuristic must be less at each state than the\n')
         handle.write('# true cost of the optimal path from that state to a goal.\n')
 
-        # solve problem and write solution
+        # 解决问题并编写解决方案
         lay = layout.Layout([l.strip() for l in self.layout_text.split('\n')])
         start_state = pacman.GameState()
         start_state.initialize(lay, 0)
@@ -803,13 +801,13 @@ class CornerHeuristicPacman(testClasses.TestCase):
     def writeSolution(self, moduleDict, filePath):
         search = moduleDict['search']
         searchAgents = moduleDict['searchAgents']
-        # write comment
+        # 写注释
         handle = open(filePath, 'w')
         handle.write('# This solution file specifies the length of the optimal path\n')
         handle.write('# as well as the thresholds on number of nodes expanded to be\n')
         handle.write('# used in scoring.\n')
 
-        # solve problem and write solution
+        # 解决问题并编写解决方案
         lay = layout.Layout([l.strip() for l in self.layout_text.split('\n')])
         start_state = pacman.GameState()
         start_state.initialize(lay, 0)

@@ -1,24 +1,21 @@
 # game.py
 # -------
-# Licensing Information:  You are free to use or extend these projects for
-# educational purposes provided that (1) you do not distribute or publish
-# solutions, (2) you retain this notice, and (3) you provide clear
-# attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
+#许可信息:您可以出于教育目的自由使用或扩展这些项目,前提是
+# (1)您不散发或发布解决方案,
+# (2)您保留本声明,以及
+# (3)您提供明确的加州大学伯克利分校归属,包括指向 http://ai.berkeley.edu 的链接.
 # 
-# Attribution Information: The Pacman AI projects were developed at UC Berkeley.
-# The core projects and autograders were primarily created by John DeNero
-# (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
-# Student side autograding was added by Brad Miller, Nick Hay, and
-# Pieter Abbeel (pabbeel@cs.berkeley.edu).
+# 归属信息:吃豆人AI项目是在加州大学伯克利分校开发的.
+# 核心项目和自动评分器主要由John DeNero(denero@cs.berkeley.edu)和Dan Klein(klein@cs.berkeley.edu)创建.
+# 学生端自动评分由Brad Miller、Nick Hay和Pieter Abbeel(pabbeel@cs.berkeley.edu)添加.
 
 
 # game.py
 # -------
-# Licensing Information: Please do not distribute or publish solutions to this
-# project. You are free to use and extend these projects for educational
-# purposes. The Pacman AI projects were developed at UC Berkeley, primarily by
-# John DeNero (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
-# For more info, see http://inst.eecs.berkeley.edu/~cs188/sp09/pacman.html
+# 许可信息:请不要分发或发布此项目的解决方案.您可以自由地使用和扩展这些项目用于教育目的.
+# Pacman AI 项目主要由加州大学伯克利分校的 John DeNero (denero@cs.berkeley.edu) 
+# 和 Dan Klein (klein@cs.berkeley.edu) 开发.
+# 更多信息,请访问 http://inst.eecs.berkeley.edu/~cs188/sp09/pacman.html.
 
 from util import *
 import time, os
@@ -26,23 +23,22 @@ import traceback
 import sys
 
 #######################
-# Parts worth reading #
+#    值得阅读的部分    #
 #######################
 
 class Agent:
     """
-    An agent must define a getAction method, but may also define the
-    following methods which will be called if they exist:
+    Agent必须定义一个getAction方法,但也可以定义以下方法(如果存在的话,它们将被调用):
 
-    def registerInitialState(self, state): # inspects the starting state
+    def registerInitialState(self, state): # 检查初始状态
     """
     def __init__(self, index=0):
         self.index = index
 
     def getAction(self, state):
         """
-        The Agent will receive a GameState (from either {pacman, capture, sonar}.py) and
-        must return an action from Directions.{North, South, East, West, Stop}
+        Agent将接收一个GameState(来自{pacman, capture, sonar}.py中的任何一个)
+        并必须返回一个来自Directions.{North, South, East, West, Stop}的动作.
         """
         raiseNotDefined()
 
@@ -69,11 +65,10 @@ class Directions:
 
 class Configuration:
     """
-    A Configuration holds the (x,y) coordinate of a character, along with its
-    traveling direction.
+    一个配置(Configuration)包含了一个字符的(x,y)坐标,以及它的移动方向.
 
-    The convention for positions, like a graph, is that (0,0) is the lower left corner, x increases
-    horizontally and y increases vertically.  Therefore, north is the direction of increasing y, or (0,1).
+    对于位置的约定,就像图形一样,(0,0) 是左下角,
+    x 水平增加,y 垂直增加.因此,北方是 y 增加的方向,即 (0,1).
     """
 
     def __init__(self, pos, direction):
@@ -104,22 +99,21 @@ class Configuration:
 
     def generateSuccessor(self, vector):
         """
-        Generates a new configuration reached by translating the current
-        configuration by the action vector.  This is a low-level call and does
-        not attempt to respect the legality of the movement.
+        通过动作向量平移当前配置来生成新的配置.
+        这是一个低级别的调用,并不尝试保证移动的合法性.
 
-        Actions are movement vectors.
+        动作是移动向量.
         """
         x, y= self.pos
         dx, dy = vector
         direction = Actions.vectorToDirection(vector)
         if direction == Directions.STOP:
-            direction = self.direction # There is no stop direction
+            direction = self.direction # 没有代表“停止”的动作向量
         return Configuration((x + dx, y+dy), direction)
 
 class AgentState:
     """
-    AgentStates hold the state of an agent (configuration, speed, scared, etc).
+    AgentStates 保存了Agent的状态(配置、速度、是否害怕等).
     """
 
     def __init__( self, startConfiguration, isPacman ):
@@ -161,14 +155,14 @@ class AgentState:
 
 class Grid:
     """
-    A 2-dimensional array of objects backed by a list of lists.  Data is accessed
-    via grid[x][y] where (x,y) are positions on a Pacman map with x horizontal,
-    y vertical and the origin (0,0) in the bottom left corner.
+    一个由列表的列表支持的对象二维数组.数据通过 grid[x][y] 访问,
+    其中 (x,y) 是 Pacman 地图上的位置,x 表示水平方向,
+    y 表示垂直方向,原点 (0,0) 在左下角.
 
-    The __str__ method constructs an output that is oriented like a pacman board.
+    __str__ 方法构造了一个类似于 Pacman 游戏板的输出.
     """
     def __init__(self, width, height, initialValue=False, bitRepresentation=None):
-        if initialValue not in [False, True]: raise Exception('Grids can only contain booleans')
+        if initialValue not in [False, True]: raise Exception('网格只能包含布尔值(true/false)')
         self.CELLS_PER_INT = 30
 
         self.width = width
@@ -228,7 +222,7 @@ class Grid:
 
     def packBits(self):
         """
-        Returns an efficient int list representation
+        返回一个高效的整数列表表示形式
 
         (width, height, bitPackedInts...)
         """
@@ -252,7 +246,7 @@ class Grid:
 
     def _unpackBits(self, bits):
         """
-        Fills in data from a bit-level representation
+        从位级表示填充数据
         """
         cell = 0
         for packed in bits:
@@ -264,7 +258,7 @@ class Grid:
 
     def _unpackInt(self, packed, size):
         bools = []
-        if packed < 0: raise ValueError("must be a positive integer")
+        if packed < 0: raise ValueError("必须是正整数")
         for i in range(size):
             n = 2 ** (self.CELLS_PER_INT - i - 1)
             if packed >= n:
@@ -281,14 +275,14 @@ def reconstituteGrid(bitRep):
     return Grid(width, height, bitRepresentation= bitRep[2:])
 
 ####################################
-# Parts you shouldn't have to read #
+#        你不需要阅读的部分         #
 ####################################
 
 class Actions:
     """
     A collection of static methods for manipulating move actions.
     """
-    # Directions
+    # 方向
     _directions = {Directions.NORTH: (0, 1),
                    Directions.SOUTH: (0, -1),
                    Directions.EAST:  (1, 0),
@@ -334,7 +328,7 @@ class Actions:
         x, y = config.pos
         x_int, y_int = int(x + 0.5), int(y + 0.5)
 
-        # In between grid points, all agents must continue straight
+        # 在网格点之间,所有Agent必须继续直行
         if (abs(x - x_int) + abs(y - y_int)  > Actions.TOLERANCE):
             return [config.getDirection()]
 
@@ -374,7 +368,7 @@ class GameStateData:
     """
     def __init__( self, prevState = None ):
         """
-        Generates a new data packet by copying information from its predecessor.
+        通过从前一个数据包复制信息来生成新的数据包.
         """
         if prevState != None:
             self.food = prevState.food.shallowCopy()
@@ -410,10 +404,10 @@ class GameStateData:
 
     def __eq__( self, other ):
         """
-        Allows two states to be compared.
+        允许比较两个状态.
         """
         if other == None: return False
-        # TODO Check for type of other
+        # TODO: 检查其他类型
         if not self.agentStates == other.agentStates: return False
         if not self.food == other.food: return False
         if not self.capsules == other.capsules: return False
@@ -422,7 +416,7 @@ class GameStateData:
 
     def __hash__( self ):
         """
-        Allows states to be keys of dictionaries.
+        允许状态作为字典的键.
         """
         for i, state in enumerate( self.agentStates ):
             try:
@@ -486,7 +480,7 @@ class GameStateData:
 
     def initialize( self, layout, numGhostAgents ):
         """
-        Creates an initial game state from a layout array (see layout.py).
+        根据布局数组(参见 layout.py)创建一个初始游戏状态.
         """
         self.food = layout.food.copy()
         #self.capsules = []
@@ -499,7 +493,7 @@ class GameStateData:
         numGhosts = 0
         for isPacman, pos in layout.agentPositions:
             if not isPacman:
-                if numGhosts == numGhostAgents: continue # Max ghosts reached already
+                if numGhosts == numGhostAgents: continue # 已经达到最大鬼数量
                 else: numGhosts += 1
             self.agentStates.append( AgentState( Configuration( pos, Directions.STOP), isPacman) )
         self._eaten = [False for a in self.agentStates]
@@ -512,7 +506,7 @@ except:
 
 class Game:
     """
-    The Game manages the control flow, soliciting actions from agents.
+    游戏管理控制流程,向Agent征求行动.
     """
 
     def __init__( self, agents, display, rules, startingIndex=0, muteAgents=False, catchExceptions=False ):
@@ -538,7 +532,7 @@ class Game:
             return self.rules.getProgress(self)
 
     def _agentCrash( self, agentIndex, quiet=False):
-        "Helper method for handling agent crashes"
+        "处理Agent崩溃的辅助方法"
         if not quiet: traceback.print_exc()
         self.gameOver = True
         self.agentCrashed = True
@@ -559,26 +553,25 @@ class Game:
     def unmute(self):
         if not self.muteAgents: return
         global OLD_STDOUT, OLD_STDERR
-        # Revert stdout/stderr to originals
+        # 将 stdout/stderr 恢复为原始状态
         sys.stdout = OLD_STDOUT
         sys.stderr = OLD_STDERR
 
 
     def run( self ):
         """
-        Main control loop for game play.
+        游戏主控制循环.
         """
         self.display.initialize(self.state.data)
         self.numMoves = 0
 
         ###self.display.initialize(self.state.makeObservation(1).data)
-        # inform learning agents of the game start
+        # 通知学习Agent游戏开始
         for i in range(len(self.agents)):
             agent = self.agents[i]
             if not agent:
                 self.mute(i)
-                # this is a null agent, meaning it failed to load
-                # the other team wins
+                # 这是一个空Agent,意味着它未能加载,另一队获胜.
                 print("Agent %d failed to load" % i, file=sys.stderr)
                 self.unmute()
                 self._agentCrash(i, quiet=True)
@@ -594,7 +587,7 @@ class Game:
                             time_taken = time.time() - start_time
                             self.totalAgentTimes[i] += time_taken
                         except TimeoutFunctionException:
-                            print("Agent %d ran out of time on startup!" % i, file=sys.stderr)
+                            print("Agent %d 在启动时超出了时间限制!" % i, file=sys.stderr)
                             self.unmute()
                             self.agentTimeout = True
                             self._agentCrash(i, quiet=True)
@@ -605,18 +598,18 @@ class Game:
                         return
                 else:
                     agent.registerInitialState(self.state.deepCopy())
-                ## TODO: could this exceed the total time
+                ## TODO: 这可能会超过总时间
                 self.unmute()
 
         agentIndex = self.startingIndex
         numAgents = len( self.agents )
 
         while not self.gameOver:
-            # Fetch the next agent
+            # 获取下一个Agent
             agent = self.agents[agentIndex]
             move_time = 0
             skip_action = False
-            # Generate an observation of the state
+            # 生成状态的观察结果
             if 'observationFunction' in dir( agent ):
                 self.mute(agentIndex)
                 if self.catchExceptions:
@@ -639,7 +632,7 @@ class Game:
             else:
                 observation = self.state.deepCopy()
 
-            # Solicit an action
+            # 征求行动
             action = None
             self.mute(agentIndex)
             if self.catchExceptions:
@@ -651,7 +644,7 @@ class Game:
                             raise TimeoutFunctionException()
                         action = timed_func( observation )
                     except TimeoutFunctionException:
-                        print("Agent %d timed out on a single move!" % agentIndex, file=sys.stderr)
+                        print("Agent %d 在单个移动上超时了!" % agentIndex, file=sys.stderr)
                         self.agentTimeout = True
                         self._agentCrash(agentIndex, quiet=True)
                         self.unmute()
@@ -661,9 +654,9 @@ class Game:
 
                     if move_time > self.rules.getMoveWarningTime(agentIndex):
                         self.totalAgentTimeWarnings[agentIndex] += 1
-                        print("Agent %d took too long to make a move! This is warning %d" % (agentIndex, self.totalAgentTimeWarnings[agentIndex]), file=sys.stderr)
+                        print("Agent %d 移动时间过长！这是第 %d 次警告" % (agentIndex, self.totalAgentTimeWarnings[agentIndex]), file=sys.stderr)
                         if self.totalAgentTimeWarnings[agentIndex] > self.rules.getMaxTimeWarnings(agentIndex):
-                            print("Agent %d exceeded the maximum number of warnings: %d" % (agentIndex, self.totalAgentTimeWarnings[agentIndex]), file=sys.stderr)
+                            print("Agent %d 超过了最大警告次数:%d" % (agentIndex, self.totalAgentTimeWarnings[agentIndex]), file=sys.stderr)
                             self.agentTimeout = True
                             self._agentCrash(agentIndex, quiet=True)
                             self.unmute()
@@ -672,7 +665,7 @@ class Game:
                     self.totalAgentTimes[agentIndex] += move_time
                     #print("Agent: %d, time: %f, total: %f" % (agentIndex, move_time, self.totalAgentTimes[agentIndex]))
                     if self.totalAgentTimes[agentIndex] > self.rules.getMaxTotalTime(agentIndex):
-                        print("Agent %d ran out of time! (time: %1.2f)" % (agentIndex, self.totalAgentTimes[agentIndex]), file=sys.stderr)
+                        print("Agent %d 时间耗尽！(时间:%1.2f)" % (agentIndex, self.totalAgentTimes[agentIndex]), file=sys.stderr)
                         self.agentTimeout = True
                         self._agentCrash(agentIndex, quiet=True)
                         self.unmute()
@@ -686,7 +679,7 @@ class Game:
                 action = agent.getAction(observation)
             self.unmute()
 
-            # Execute the action
+            # 执行该动作
             self.moveHistory.append( (agentIndex, action) )
             if self.catchExceptions:
                 try:
@@ -699,22 +692,22 @@ class Game:
             else:
                 self.state = self.state.generateSuccessor( agentIndex, action )
 
-            # Change the display
+            # 更改显示
             self.display.update( self.state.data )
             ###idx = agentIndex - agentIndex % 2 + 1
             ###self.display.update( self.state.makeObservation(idx).data )
 
-            # Allow for game specific conditions (winning, losing, etc.)
+            # 允许特定游戏条件(获胜、失败等)
             self.rules.process(self.state, self)
-            # Track progress
+            # 跟踪进度
             if agentIndex == numAgents + 1: self.numMoves += 1
-            # Next agent
+            # 下一个Agent
             agentIndex = ( agentIndex + 1 ) % numAgents
 
             if _BOINC_ENABLED:
                 boinc.set_fraction_done(self.getProgress())
 
-        # inform a learning agent of the game result
+        # 通知学习Agent游戏结果
         for agentIndex, agent in enumerate(self.agents):
             if "final" in dir( agent ) :
                 try:

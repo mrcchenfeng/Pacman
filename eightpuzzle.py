@@ -1,43 +1,38 @@
 # eightpuzzle.py
 # --------------
-# Licensing Information:  You are free to use or extend these projects for
-# educational purposes provided that (1) you do not distribute or publish
-# solutions, (2) you retain this notice, and (3) you provide clear
-# attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
+#许可信息:您可以出于教育目的自由使用或扩展这些项目,前提是
+# (1)您不散发或发布解决方案,
+# (2)您保留本声明,以及
+# (3)您提供明确的加州大学伯克利分校归属,包括指向 http://ai.berkeley.edu 的链接.
 # 
-# Attribution Information: The Pacman AI projects were developed at UC Berkeley.
-# The core projects and autograders were primarily created by John DeNero
-# (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
-# Student side autograding was added by Brad Miller, Nick Hay, and
-# Pieter Abbeel (pabbeel@cs.berkeley.edu).
+# 归属信息:吃豆人AI项目是在加州大学伯克利分校开发的.
+# 核心项目和自动评分器主要由John DeNero(denero@cs.berkeley.edu)和Dan Klein(klein@cs.berkeley.edu)创建.
+# 学生端自动评分由Brad Miller、Nick Hay和Pieter Abbeel(pabbeel@cs.berkeley.edu)添加.
 
 
 import search
 import random
 
-# Module Classes
+# 模块类
 
 class EightPuzzleState:
     """
-    The Eight Puzzle is described in the course textbook on
-    page 64.
+    八数码问题在课程的教科书中第64页有描述.
 
-    This class defines the mechanics of the puzzle itself.  The
-    task of recasting this puzzle as a search problem is left to
-    the EightPuzzleSearchProblem class.
+    这个类定义了八数码问题本身的机制.
+    将该问题重新表述为搜索问题的任务留给 EightPuzzleSearchProblem 类来完成.
     """
 
     def __init__( self, numbers ):
         """
-          Constructs a new eight puzzle from an ordering of numbers.
+          从数字的顺序中构造一个新的八数码问题.
 
-        numbers: a list of integers from 0 to 8 representing an
-          instance of the eight puzzle.  0 represents the blank
-          space.  Thus, the list
-
+        numbers: 一个从0到8的整数列表,代表八数码问题的一个实例.
+        0代表空白空间.
+        因此,这个列表
             [1, 0, 2, 3, 4, 5, 6, 7, 8]
 
-          represents the eight puzzle:
+          表示这个八数码问题:
             -------------
             | 1 |   | 2 |
             -------------
@@ -46,11 +41,10 @@ class EightPuzzleState:
             | 6 | 7 | 8 |
             ------------
 
-        The configuration of the puzzle is stored in a 2-dimensional
-        list (a list of lists) 'cells'.
+        八数码问题的配置被存储在一个二维列表(列表的列表)'cells'中.
         """
         self.cells = []
-        numbers = numbers[:] # Make a copy so as not to cause side-effects.
+        numbers = numbers[:] # 创建一个副本以避免产生副作用.
         numbers.reverse()
         for row in range( 3 ):
             self.cells.append( [] )
@@ -61,7 +55,7 @@ class EightPuzzleState:
 
     def isGoal( self ):
         """
-          Checks to see if the puzzle is in its goal state.
+          检查八数码问题是否处于目标状态.
 
             -------------
             |   | 1 | 2 |
@@ -87,10 +81,10 @@ class EightPuzzleState:
 
     def legalMoves( self ):
         """
-          Returns a list of legal moves from the current state.
+          返回从当前状态出发的合法移动列表.
 
-        Moves consist of moving the blank space up, down, left or right.
-        These are encoded as 'up', 'down', 'left' and 'right' respectively.
+        移动包括将空白空间向上、向下、向左或向右移动.
+        这些移动分别被编码为 'up'、'down'、'left' 和 'right'.
 
         >>> EightPuzzleState([0, 1, 2, 3, 4, 5, 6, 7, 8]).legalMoves()
         ['down', 'right']
@@ -109,15 +103,12 @@ class EightPuzzleState:
 
     def result(self, move):
         """
-          Returns a new eightPuzzle with the current state and blankLocation
-        updated based on the provided move.
+          根据提供的移动,返回一个新的八数码问题,其中当前状态和空白位置已更新.
 
-        The move should be a string drawn from a list returned by legalMoves.
-        Illegal moves will raise an exception, which may be an array bounds
-        exception.
+        移动应该是一个从 legalMoves 返回的列表中的字符串.
+        非法的移动将引发异常,这可能是数组越界异常.
 
-        NOTE: This function *does not* change the current object.  Instead,
-        it returns a new object.
+        NOTE: 这个函数*不会改变*当前对象.相反,它返回一个新对象.
         """
         row, col = self.blankLocation
         if(move == 'up'):
@@ -135,21 +126,20 @@ class EightPuzzleState:
         else:
             raise "Illegal Move"
 
-        # Create a copy of the current eightPuzzle
+        # 创建当前八数码问题的一个副本
         newPuzzle = EightPuzzleState([0, 0, 0, 0, 0, 0, 0, 0, 0])
         newPuzzle.cells = [values[:] for values in self.cells]
-        # And update it to reflect the move
+        # 并更新它以反映移动
         newPuzzle.cells[row][col] = self.cells[newrow][newcol]
         newPuzzle.cells[newrow][newcol] = self.cells[row][col]
         newPuzzle.blankLocation = newrow, newcol
 
         return newPuzzle
 
-    # Utilities for comparison and display
+    # 用于比较和显示的实用程序
     def __eq__(self, other):
         """
-            Overloads '==' such that two eightPuzzles with the same configuration
-          are equal.
+            重载 '==' 运算符,使得具有相同配置的两个八数码问题被视为相等.
 
           >>> EightPuzzleState([0, 1, 2, 3, 4, 5, 6, 7, 8]) == \
               EightPuzzleState([1, 0, 2, 3, 4, 5, 6, 7, 8]).result('left')
@@ -165,7 +155,7 @@ class EightPuzzleState:
 
     def __getAsciiString(self):
         """
-          Returns a display string for the maze
+          返回迷宫的显示字符串
         """
         lines = []
         horizontalLine = ('-' * (13))
@@ -183,16 +173,16 @@ class EightPuzzleState:
     def __str__(self):
         return self.__getAsciiString()
 
-# TODO: Implement The methods in this class
+# TODO: 实现这个类中的方法
 
 class EightPuzzleSearchProblem(search.SearchProblem):
     """
-      Implementation of a SearchProblem for the  Eight Puzzle domain
+      八数码问题领域的 SearchProblem 实现
 
-      Each state is represented by an instance of an eightPuzzle.
+      每个状态都由一个eightPuzzle的实例表示.
     """
     def __init__(self,puzzle):
-        "Creates a new EightPuzzleSearchProblem which stores search information."
+        "创建一个新的EightPuzzleSearchProblem,用于存储搜索信息."
         self.puzzle = puzzle
 
     def getStartState(self):
@@ -203,9 +193,8 @@ class EightPuzzleSearchProblem(search.SearchProblem):
 
     def getSuccessors(self,state):
         """
-          Returns list of (successor, action, stepCost) pairs where
-          each succesor is either left, right, up, or down
-          from the original state and the cost is 1.0 for each
+          返回(后继状态,动作,步长成本)的列表,
+          其中每个后继状态都是原始状态的左、右、上或下方向,每个成本为1.0
         """
         succ = []
         for a in state.legalMoves():
@@ -214,10 +203,9 @@ class EightPuzzleSearchProblem(search.SearchProblem):
 
     def getCostOfActions(self, actions):
         """
-         actions: A list of actions to take
+         actions(动作列表):要执行的一系列动作列表
 
-        This method returns the total cost of a particular sequence of actions.  The sequence must
-        be composed of legal moves
+        此方法返回特定动作序列的总成本.该序列必须由合法移动组成
         """
         return len(actions)
 
@@ -230,12 +218,10 @@ EIGHT_PUZZLE_DATA = [[1, 0, 2, 3, 4, 5, 6, 7, 8],
 
 def loadEightPuzzle(puzzleNumber):
     """
-      puzzleNumber: The number of the eight puzzle to load.
+      puzzleNumber: 要加载的八数码问题的编号.
 
-      Returns an eight puzzle object generated from one of the
-      provided puzzles in EIGHT_PUZZLE_DATA.
-
-      puzzleNumber can range from 0 to 5.
+      从提供的EIGHT_PUZZLE_DATA中的某个八数码问题生成一个八数码对象.
+      puzzleNumber 可以从 0 到 5 之间的数字中选择.
 
       >>> print(loadEightPuzzle(0))
       -------------
@@ -250,32 +236,31 @@ def loadEightPuzzle(puzzleNumber):
 
 def createRandomEightPuzzle(moves=100):
     """
-      moves: number of random moves to apply
+      moves: 要执行的随机移动次数
 
-      Creates a random eight puzzle by applying
-      a series of 'moves' random moves to a solved
-      puzzle.
+      通过在一个已解决的八数码问题上应用一系列'moves'的随机移动,
+      来创建一个随机的八数码问题.
     """
     puzzle = EightPuzzleState([0,1,2,3,4,5,6,7,8])
     for i in range(moves):
-        # Execute a random legal move
+        # 执行一个随机的合法移动
         puzzle = puzzle.result(random.sample(puzzle.legalMoves(), 1)[0])
     return puzzle
 
 if __name__ == '__main__':
     puzzle = createRandomEightPuzzle(25)
-    print('A random puzzle:')
+    print('一个随机拼图(八数码问题):')
     print(puzzle)
 
     problem = EightPuzzleSearchProblem(puzzle)
     path = search.breadthFirstSearch(problem)
-    print('BFS found a path of %d moves: %s' % (len(path), str(path)))
+    print('BFS(广度优先搜索)找到了一个包含%d步的路径:%s' % (len(path), str(path)))
     curr = puzzle
     i = 1
     for a in path:
         curr = curr.result(a)
-        print('After %d move%s: %s' % (i, ("", "s")[i>1], a))
+        print('经过%d步%s:%s' % (i, ("", "s")[i>1], a))
         print(curr)
 
-        input("Press return for the next state...")   # wait for key stroke
+        input("按回车键进入下一状态...")   # 等待按键输入
         i += 1

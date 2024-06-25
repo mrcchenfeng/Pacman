@@ -1,15 +1,13 @@
 # graphicsUtils.py
 # ----------------
-# Licensing Information:  You are free to use or extend these projects for
-# educational purposes provided that (1) you do not distribute or publish
-# solutions, (2) you retain this notice, and (3) you provide clear
-# attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
+#许可信息:您可以出于教育目的自由使用或扩展这些项目,前提是
+# (1)您不散发或发布解决方案,
+# (2)您保留本声明,以及
+# (3)您提供明确的加州大学伯克利分校归属,包括指向 http://ai.berkeley.edu 的链接.
 # 
-# Attribution Information: The Pacman AI projects were developed at UC Berkeley.
-# The core projects and autograders were primarily created by John DeNero
-# (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
-# Student side autograding was added by Brad Miller, Nick Hay, and
-# Pieter Abbeel (pabbeel@cs.berkeley.edu).
+# 归属信息:吃豆人AI项目是在加州大学伯克利分校开发的.
+# 核心项目和自动评分器主要由John DeNero(denero@cs.berkeley.edu)和Dan Klein(klein@cs.berkeley.edu)创建.
+# 学生端自动评分由Brad Miller、Nick Hay和Pieter Abbeel(pabbeel@cs.berkeley.edu)添加.
 
 
 import sys
@@ -21,15 +19,15 @@ import types
 import tkinter
 import os.path
 
-_Windows = sys.platform == 'win32'  # True if on Win95/98/NT
+_Windows = sys.platform == 'win32'  # 如果在 Win95/98/NT 上为 True
 
-_root_window = None      # The root window for graphics output
-_canvas = None      # The canvas which holds graphics
-_canvas_xs = None      # Size of canvas object
+_root_window = None      # 图形输出的根窗口
+_canvas = None      # 保存图形的画布
+_canvas_xs = None      # 画布对象的大小
 _canvas_ys = None
-_canvas_x = None      # Current position on canvas
+_canvas_x = None      # 画布上的当前位置
 _canvas_y = None
-_canvas_col = None      # Current colour (set to black below)
+_canvas_col = None      # 当前颜色(下面设置为黑色)
 _canvas_tsize = 12
 _canvas_tserifs = 0
 
@@ -43,7 +41,7 @@ if _Windows:
     _canvas_tfonts = ['times new roman', 'lucida console']
 else:
     _canvas_tfonts = ['times', 'lucidasans-24']
-    pass # XXX need defaults here
+    pass # XXX 这里需要默认值
 
 def sleep(secs):
     global _root_window
@@ -58,23 +56,23 @@ def begin_graphics(width=640, height=480, color=formatColor(0, 0, 0), title=None
 
     global _root_window, _canvas, _canvas_x, _canvas_y, _canvas_xs, _canvas_ys, _bg_color
 
-    # Check for duplicate call
+    # 检查重复呼叫
     if _root_window is not None:
-        # Lose the window.
+        # 失去窗口.
         _root_window.destroy()
 
-    # Save the canvas size parameters
+    # 保存画布大小参数
     _canvas_xs, _canvas_ys = width - 1, height - 1
     _canvas_x, _canvas_y = 0, _canvas_ys
     _bg_color = color
 
-    # Create the root window
+    # 创建根窗口
     _root_window = tkinter.Tk()
     _root_window.protocol('WM_DELETE_WINDOW', _destroy_window)
     _root_window.title(title or 'Graphics Window')
     _root_window.resizable(0, 0)
 
-    # Create the canvas object
+    # 创建画布对象
     try:
         _canvas = tkinter.Canvas(_root_window, width=width, height=height)
         _canvas.pack()
@@ -84,7 +82,7 @@ def begin_graphics(width=640, height=480, color=formatColor(0, 0, 0), title=None
         _root_window = None
         raise
 
-    # Bind to key-down and key-up events
+    # 绑定到 key-down 和 key-up 事件
     _root_window.bind( "<KeyPress>", _keypress )
     _root_window.bind( "<KeyRelease>", _keyrelease )
     _root_window.bind( "<FocusIn>", _clear_keys )
@@ -149,7 +147,7 @@ def end_graphics():
             if _root_window != None:
                 _root_window.destroy()
         except SystemExit as e:
-            print('Ending graphics raised an exception:', e)
+            print('结束图形引发了异常:', e)
     finally:
         _root_window = None
         _canvas = None
@@ -171,7 +169,7 @@ def polygon(coords, outlineColor, fillColor=None, filled=1, smoothed=1, behind=0
     if filled == 0: fillColor = ""
     poly = _canvas.create_polygon(c, outline=outlineColor, fill=fillColor, smooth=smoothed, width=width)
     if behind > 0:
-        _canvas.tag_lower(poly, behind) # Higher should be more visible
+        _canvas.tag_lower(poly, behind) # 越高越明显
     return poly
 
 def square(pos, r, color, filled=1, behind=0):
@@ -244,15 +242,15 @@ def line(here, there, color=formatColor(0, 0, 0), width=2):
     return _canvas.create_line(x0, y0, x1, y1, fill=color, width=width)
 
 ##############################################################################
-### Keypress handling ########################################################
+### 按键处理 #################################################################
 ##############################################################################
 
-# We bind to key-down and key-up events.
+# 我们绑定到键下和键上事件.
 
 _keysdown = {}
 _keyswaiting = {}
-# This holds an unprocessed key release.  We delay key releases by up to
-# one call to keys_pressed() to get round a problem with auto repeat.
+# 这保存了一个未处理的按键释放事件.我们延迟按键释放事件,
+# 最多延迟到下一次调用keys_pressed()函数,以解决自动重复的问题.
 _got_release = None
 
 def _keypress(event):
@@ -273,16 +271,16 @@ def _keyrelease(event):
     _got_release = 1
 
 def remap_arrows(event):
-    # TURN ARROW PRESSES INTO LETTERS (SHOULD BE IN KEYBOARD AGENT)
+    # 将箭头按下变成字母(应在键盘Agent中)
     if event.char in ['a', 's', 'd', 'w']:
         return
-    if event.keycode in [37, 101]: # LEFT ARROW (win / x)
+    if event.keycode in [37, 101]: # 向左箭头 (win / x)
         event.char = 'a'
-    if event.keycode in [38, 99]: # UP ARROW
+    if event.keycode in [38, 99]: # 向上箭头
         event.char = 'w'
-    if event.keycode in [39, 102]: # RIGHT ARROW
+    if event.keycode in [39, 102]: # 向右箭头
         event.char = 'd'
-    if event.keycode in [40, 104]: # DOWN ARROW
+    if event.keycode in [40, 104]: # 向下箭头
         event.char = 's'
 
 def _clear_keys(event=None):
@@ -304,7 +302,7 @@ def keys_waiting():
     _keyswaiting = {}
     return keys
 
-# Block for a list of keys...
+# 阻止键列表...
 
 def wait_for_keys():
     keys = []
@@ -334,7 +332,7 @@ def move_to(object, x, y=None,
 
     horiz = True
     newCoords = []
-    current_x, current_y = _canvas.coords(object)[0:2] # first point
+    current_x, current_y = _canvas.coords(object)[0:2] # 第一点
     for coord in  _canvas.coords(object):
         if horiz:
             inc = x - current_x
@@ -371,7 +369,7 @@ def move_by(object, x, y=None,
         _canvas.tag_raise(object)
 
 def writePostscript(filename):
-    "Writes the current canvas to a postscript file."
+    "将当前画布写入 postscript 文件."
     psfile = open(filename, 'w')
     psfile.write(_canvas.postscript(pageanchor='sw',
                      y='0.c',

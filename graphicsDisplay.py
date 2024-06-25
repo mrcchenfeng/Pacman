@@ -1,15 +1,13 @@
 # graphicsDisplay.py
 # ------------------
-# Licensing Information:  You are free to use or extend these projects for
-# educational purposes provided that (1) you do not distribute or publish
-# solutions, (2) you retain this notice, and (3) you provide clear
-# attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
+#许可信息:您可以出于教育目的自由使用或扩展这些项目,前提是
+# (1)您不散发或发布解决方案,
+# (2)您保留本声明,以及
+# (3)您提供明确的加州大学伯克利分校归属,包括指向 http://ai.berkeley.edu 的链接.
 # 
-# Attribution Information: The Pacman AI projects were developed at UC Berkeley.
-# The core projects and autograders were primarily created by John DeNero
-# (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
-# Student side autograding was added by Brad Miller, Nick Hay, and
-# Pieter Abbeel (pabbeel@cs.berkeley.edu).
+# 归属信息:吃豆人AI项目是在加州大学伯克利分校开发的.
+# 核心项目和自动评分器主要由John DeNero(denero@cs.berkeley.edu)和Dan Klein(klein@cs.berkeley.edu)创建.
+# 学生端自动评分由Brad Miller、Nick Hay和Pieter Abbeel(pabbeel@cs.berkeley.edu)添加.
 
 
 from graphicsUtils import *
@@ -17,11 +15,11 @@ import math, time
 from game import Directions
 
 ###########################
-#  GRAPHICS DISPLAY CODE  #
+#       图形显示代码       #
 ###########################
 
-# Most code by Dan Klein and John Denero written or rewritten for cs188, UC Berkeley.
-# Some code from a Pacman implementation by LiveWires, and used / modified with permission.
+# 大部分代码由Dan Klein和John Denero编写或重写,用于加州大学伯克利分校的cs188课程.
+# 部分代码来自LiveWires实现的Pacman游戏,经许可后使用/修改.
 
 DEFAULT_GRID_SIZE = 30.0
 INFO_PANE_HEIGHT = 35
@@ -33,12 +31,12 @@ PACMAN_OUTLINE_WIDTH = 2
 PACMAN_CAPTURE_OUTLINE_WIDTH = 4
 
 GHOST_COLORS = []
-GHOST_COLORS.append(formatColor(.9,0,0)) # Red
-GHOST_COLORS.append(formatColor(0,.3,.9)) # Blue
-GHOST_COLORS.append(formatColor(.98,.41,.07)) # Orange
-GHOST_COLORS.append(formatColor(.1,.75,.7)) # Green
-GHOST_COLORS.append(formatColor(1.0,0.6,0.0)) # Yellow
-GHOST_COLORS.append(formatColor(.4,0.13,0.91)) # Purple
+GHOST_COLORS.append(formatColor(.9,0,0)) # 红
+GHOST_COLORS.append(formatColor(0,.3,.9)) # 蓝
+GHOST_COLORS.append(formatColor(.98,.41,.07)) # 橙
+GHOST_COLORS.append(formatColor(.1,.75,.7)) # 绿
+GHOST_COLORS.append(formatColor(1.0,0.6,0.0)) # 黄
+GHOST_COLORS.append(formatColor(.4,0.13,0.91)) # 紫
 
 TEAM_COLORS = GHOST_COLORS[:2]
 
@@ -64,19 +62,19 @@ PACMAN_COLOR = formatColor(255.0/255.0,255.0/255.0,61.0/255)
 PACMAN_SCALE = 0.5
 #pacman_speed = 0.25
 
-# Food
+# 食物
 FOOD_COLOR = formatColor(1,1,1)
 FOOD_SIZE = 0.1
 
-# Laser
+# 激光
 LASER_COLOR = formatColor(1,0,0)
 LASER_SIZE = 0.02
 
-# Capsule graphics
+# 胶囊图形
 CAPSULE_COLOR = formatColor(1,1,1)
 CAPSULE_SIZE = 0.25
 
-# Drawing walls
+# 绘图墙
 WALL_RADIUS = 0.15
 
 class InfoPane:
@@ -91,14 +89,14 @@ class InfoPane:
 
     def toScreen(self, pos, y = None):
         """
-          Translates a point relative from the bottom left of the info pane.
+          从信息窗格的左下角转换相对点.
         """
         if y == None:
             x,y = pos
         else:
             x = pos
 
-        x = self.gridSize + x # Margin
+        x = self.gridSize + x # 边缘
         y = self.base + y
         return x,y
 
@@ -170,11 +168,11 @@ class PacmanGraphics:
         self.startGraphics(state)
 
         # self.drawDistributions(state)
-        self.distributionImages = None  # Initialized lazily
+        self.distributionImages = None  # 延迟初始化
         self.drawStaticObjects(state)
         self.drawAgentObjects(state)
 
-        # Information
+        # 信息
         self.previousState = state
 
     def startGraphics(self, state):
@@ -221,7 +219,7 @@ class PacmanGraphics:
 
     def swapImages(self, agentIndex, newState):
         """
-          Changes an image from a ghost to a pacman or vis versa (for capture)
+          将图像从幽灵更改为吃豆人,反之亦然(用于捕获)
         """
         prevState, prevImage = self.agentImages[agentIndex]
         for item in prevImage: remove_from_screen(item)
@@ -420,7 +418,7 @@ class PacmanGraphics:
         y = (self.height  - y)*self.gridSize
         return ( x, y )
 
-    # Fixes some TK issue with off-center circles
+    # 修复了偏心圆的一些 TK 问题
     def to_screen2(self, point):
         ( x, y ) = point
         #y = self.height - y
@@ -435,12 +433,12 @@ class PacmanGraphics:
             if self.capture and (xNum * 2) >= wallMatrix.width: wallColor = TEAM_COLORS[1]
 
             for yNum, cell in enumerate(x):
-                if cell: # There's a wall here
+                if cell: # 这里有一堵墙
                     pos = (xNum, yNum)
                     screen = self.to_screen(pos)
                     screen2 = self.to_screen2(pos)
 
-                    # draw each quadrant of the square based on adjacent walls
+                    # 根据相邻的墙壁绘制正方形的每个象限
                     wIsWall = self.isWall(xNum-1, yNum, wallMatrix)
                     eIsWall = self.isWall(xNum+1, yNum, wallMatrix)
                     nIsWall = self.isWall(xNum, yNum+1, wallMatrix)
@@ -450,66 +448,66 @@ class PacmanGraphics:
                     neIsWall = self.isWall(xNum+1, yNum+1, wallMatrix)
                     seIsWall = self.isWall(xNum+1, yNum-1, wallMatrix)
 
-                    # NE quadrant
+                    # 东北象限
                     if (not nIsWall) and (not eIsWall):
-                        # inner circle
+                        # 内圈
                         circle(screen2, WALL_RADIUS * self.gridSize, wallColor, wallColor, (0,91), 'arc')
                     if (nIsWall) and (not eIsWall):
-                        # vertical line
+                        # 垂直线
                         line(add(screen, (self.gridSize*WALL_RADIUS, 0)), add(screen, (self.gridSize*WALL_RADIUS, self.gridSize*(-0.5)-1)), wallColor)
                     if (not nIsWall) and (eIsWall):
-                        # horizontal line
+                        # 水平线
                         line(add(screen, (0, self.gridSize*(-1)*WALL_RADIUS)), add(screen, (self.gridSize*0.5+1, self.gridSize*(-1)*WALL_RADIUS)), wallColor)
                     if (nIsWall) and (eIsWall) and (not neIsWall):
-                        # outer circle
+                        # 外圈
                         circle(add(screen2, (self.gridSize*2*WALL_RADIUS, self.gridSize*(-2)*WALL_RADIUS)), WALL_RADIUS * self.gridSize-1, wallColor, wallColor, (180,271), 'arc')
                         line(add(screen, (self.gridSize*2*WALL_RADIUS-1, self.gridSize*(-1)*WALL_RADIUS)), add(screen, (self.gridSize*0.5+1, self.gridSize*(-1)*WALL_RADIUS)), wallColor)
                         line(add(screen, (self.gridSize*WALL_RADIUS, self.gridSize*(-2)*WALL_RADIUS+1)), add(screen, (self.gridSize*WALL_RADIUS, self.gridSize*(-0.5))), wallColor)
 
-                    # NW quadrant
+                    # 西北象限
                     if (not nIsWall) and (not wIsWall):
-                        # inner circle
+                        # 内圈
                         circle(screen2, WALL_RADIUS * self.gridSize, wallColor, wallColor, (90,181), 'arc')
                     if (nIsWall) and (not wIsWall):
-                        # vertical line
+                        # 垂直线
                         line(add(screen, (self.gridSize*(-1)*WALL_RADIUS, 0)), add(screen, (self.gridSize*(-1)*WALL_RADIUS, self.gridSize*(-0.5)-1)), wallColor)
                     if (not nIsWall) and (wIsWall):
-                        # horizontal line
+                        # 水平线
                         line(add(screen, (0, self.gridSize*(-1)*WALL_RADIUS)), add(screen, (self.gridSize*(-0.5)-1, self.gridSize*(-1)*WALL_RADIUS)), wallColor)
                     if (nIsWall) and (wIsWall) and (not nwIsWall):
-                        # outer circle
+                        # 外圈
                         circle(add(screen2, (self.gridSize*(-2)*WALL_RADIUS, self.gridSize*(-2)*WALL_RADIUS)), WALL_RADIUS * self.gridSize-1, wallColor, wallColor, (270,361), 'arc')
                         line(add(screen, (self.gridSize*(-2)*WALL_RADIUS+1, self.gridSize*(-1)*WALL_RADIUS)), add(screen, (self.gridSize*(-0.5), self.gridSize*(-1)*WALL_RADIUS)), wallColor)
                         line(add(screen, (self.gridSize*(-1)*WALL_RADIUS, self.gridSize*(-2)*WALL_RADIUS+1)), add(screen, (self.gridSize*(-1)*WALL_RADIUS, self.gridSize*(-0.5))), wallColor)
 
-                    # SE quadrant
+                    # 东南象限
                     if (not sIsWall) and (not eIsWall):
-                        # inner circle
+                        # 内圈
                         circle(screen2, WALL_RADIUS * self.gridSize, wallColor, wallColor, (270,361), 'arc')
                     if (sIsWall) and (not eIsWall):
-                        # vertical line
+                        # 垂直线
                         line(add(screen, (self.gridSize*WALL_RADIUS, 0)), add(screen, (self.gridSize*WALL_RADIUS, self.gridSize*(0.5)+1)), wallColor)
                     if (not sIsWall) and (eIsWall):
-                        # horizontal line
+                        # 水平线
                         line(add(screen, (0, self.gridSize*(1)*WALL_RADIUS)), add(screen, (self.gridSize*0.5+1, self.gridSize*(1)*WALL_RADIUS)), wallColor)
                     if (sIsWall) and (eIsWall) and (not seIsWall):
-                        # outer circle
+                        # 外圈
                         circle(add(screen2, (self.gridSize*2*WALL_RADIUS, self.gridSize*(2)*WALL_RADIUS)), WALL_RADIUS * self.gridSize-1, wallColor, wallColor, (90,181), 'arc')
                         line(add(screen, (self.gridSize*2*WALL_RADIUS-1, self.gridSize*(1)*WALL_RADIUS)), add(screen, (self.gridSize*0.5, self.gridSize*(1)*WALL_RADIUS)), wallColor)
                         line(add(screen, (self.gridSize*WALL_RADIUS, self.gridSize*(2)*WALL_RADIUS-1)), add(screen, (self.gridSize*WALL_RADIUS, self.gridSize*(0.5))), wallColor)
 
-                    # SW quadrant
+                    # 西南象限
                     if (not sIsWall) and (not wIsWall):
-                        # inner circle
+                        # 内圈
                         circle(screen2, WALL_RADIUS * self.gridSize, wallColor, wallColor, (180,271), 'arc')
                     if (sIsWall) and (not wIsWall):
-                        # vertical line
+                        # 垂直线
                         line(add(screen, (self.gridSize*(-1)*WALL_RADIUS, 0)), add(screen, (self.gridSize*(-1)*WALL_RADIUS, self.gridSize*(0.5)+1)), wallColor)
                     if (not sIsWall) and (wIsWall):
-                        # horizontal line
+                        # 水平线
                         line(add(screen, (0, self.gridSize*(1)*WALL_RADIUS)), add(screen, (self.gridSize*(-0.5)-1, self.gridSize*(1)*WALL_RADIUS)), wallColor)
                     if (sIsWall) and (wIsWall) and (not swIsWall):
-                        # outer circle
+                        # 外圈
                         circle(add(screen2, (self.gridSize*(-2)*WALL_RADIUS, self.gridSize*(2)*WALL_RADIUS)), WALL_RADIUS * self.gridSize-1, wallColor, wallColor, (0,91), 'arc')
                         line(add(screen, (self.gridSize*(-2)*WALL_RADIUS+1, self.gridSize*(1)*WALL_RADIUS)), add(screen, (self.gridSize*(-0.5), self.gridSize*(1)*WALL_RADIUS)), wallColor)
                         line(add(screen, (self.gridSize*(-1)*WALL_RADIUS, self.gridSize*(2)*WALL_RADIUS-1)), add(screen, (self.gridSize*(-1)*WALL_RADIUS, self.gridSize*(0.5))), wallColor)
@@ -530,7 +528,7 @@ class PacmanGraphics:
             imageRow = []
             foodImages.append(imageRow)
             for yNum, cell in enumerate(x):
-                if cell: # There's food here
+                if cell: # 这里有食物
                     screen = self.to_screen((xNum, yNum ))
                     dot = circle( screen,
                                   FOOD_SIZE * self.gridSize,
@@ -563,7 +561,7 @@ class PacmanGraphics:
 
     def drawExpandedCells(self, cells):
         """
-        Draws an overlay of expanded grid positions for search agents
+        为搜索Agent绘制展开网格位置的叠加
         """
         n = float(len(cells))
         baseColor = [1.0, 0.0, 0.0]
@@ -587,8 +585,8 @@ class PacmanGraphics:
 
 
     def updateDistributions(self, distributions):
-        "Draws an agent's belief distributions"
-        # copy all distributions so we don't change their state
+        "绘制智能体的置信分布"
+        # 复制所有发行版,这样我们就不会更改它们的状态
         distributions = map(lambda x: x.copy(), distributions)
         if self.distributionImages == None:
             self.drawDistributions(self.previousState)
@@ -599,9 +597,9 @@ class PacmanGraphics:
 
                 if sum(weights) != 0:
                     pass
-                # Fog of war
+                # 战争迷雾
                 color = [0.0,0.0,0.0]
-                colors = GHOST_VEC_COLORS[1:] # With Pacman
+                colors = GHOST_VEC_COLORS[1:] # 与吃豆人
                 if self.capture: colors = GHOST_VEC_COLORS
                 for weight, gcolor in zip(weights, colors):
                     color = [min(1.0, c + 0.95 * g * weight ** .3) for c,g in zip(color, gcolor)]
@@ -618,17 +616,17 @@ class FirstPersonPacmanGraphics(PacmanGraphics):
 
         self.isBlue = isBlue
         PacmanGraphics.startGraphics(self, state)
-        # Initialize distribution images
+        # 初始化分发映像
         walls = state.layout.walls
         dist = []
         self.layout = state.layout
 
-        # Draw the rest
-        self.distributionImages = None  # initialize lazily
+        # 画出其余的
+        self.distributionImages = None  # 延迟初始化
         self.drawStaticObjects(state)
         self.drawAgentObjects(state)
 
-        # Information
+        # 信息
         self.previousState = state
 
     def lookAhead(self, config, state):
@@ -636,7 +634,7 @@ class FirstPersonPacmanGraphics(PacmanGraphics):
             return
         else:
             pass
-            # Draw relevant ghosts
+            # 绘制相关的幽灵
             allGhosts = state.getGhostStates()
             visibleGhosts = state.getVisibleGhosts()
             for i, ghost in enumerate(allGhosts):
@@ -658,11 +656,11 @@ def add(x, y):
     return (x[0] + y[0], x[1] + y[1])
 
 
-# Saving graphical output
+# 保存图形输出
 # -----------------------
-# Note: to make an animated gif from this postscript output, try the command:
+# Note: 要从此 PostScript 输出制作动画 GIF,请尝试以下命令:
 # convert -delay 7 -loop 1 -compress lzw -layers optimize frame* out.gif
-# convert is part of imagemagick (freeware)
+# convert 是 imagemagick 的一部分 (免费软件)
 
 SAVE_POSTSCRIPT = False
 POSTSCRIPT_OUTPUT_DIR = 'frames'
@@ -670,10 +668,10 @@ FRAME_NUMBER = 0
 import os
 
 def saveFrame():
-    "Saves the current graphical output as a postscript file"
+    "将当前图形输出另存为 postscript 文件"
     global SAVE_POSTSCRIPT, FRAME_NUMBER, POSTSCRIPT_OUTPUT_DIR
     if not SAVE_POSTSCRIPT: return
     if not os.path.exists(POSTSCRIPT_OUTPUT_DIR): os.mkdir(POSTSCRIPT_OUTPUT_DIR)
     name = os.path.join(POSTSCRIPT_OUTPUT_DIR, 'frame_%08d.ps' % FRAME_NUMBER)
     FRAME_NUMBER += 1
-    writePostscript(name) # writes the current canvas
+    writePostscript(name) # 写入当前画布

@@ -1,18 +1,16 @@
 # autograder.py
 # -------------
-# Licensing Information:  You are free to use or extend these projects for
-# educational purposes provided that (1) you do not distribute or publish
-# solutions, (2) you retain this notice, and (3) you provide clear
-# attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
+#许可信息:您可以出于教育目的自由使用或扩展这些项目,前提是
+# (1)您不散发或发布解决方案,
+# (2)您保留本声明,以及
+# (3)您提供明确的加州大学伯克利分校归属,包括指向 http://ai.berkeley.edu 的链接.
 # 
-# Attribution Information: The Pacman AI projects were developed at UC Berkeley.
-# The core projects and autograders were primarily created by John DeNero
-# (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
-# Student side autograding was added by Brad Miller, Nick Hay, and
-# Pieter Abbeel (pabbeel@cs.berkeley.edu).
+# 归属信息:吃豆人AI项目是在加州大学伯克利分校开发的.
+# 核心项目和自动评分器主要由John DeNero(denero@cs.berkeley.edu)和Dan Klein(klein@cs.berkeley.edu)创建.
+# 学生端自动评分由Brad Miller、Nick Hay和Pieter Abbeel(pabbeel@cs.berkeley.edu)添加.
 
 
-# imports from python standard library
+# 从 python 标准库导入
 import grading
 import importlib.util
 import optparse
@@ -27,66 +25,66 @@ try:
 except:
     pass
 
-# register arguments and set default values
+# 注册参数并设置默认值
 def readCommand(argv):
     parser = optparse.OptionParser(description = 'Run public tests on student code')
     parser.set_defaults(generateSolutions=False, edxOutput=False, gsOutput=False, muteOutput=False, printTestCase=False, noGraphics=False)
     parser.add_option('--test-directory',
                       dest = 'testRoot',
                       default = 'test_cases',
-                      help = 'Root test directory which contains subdirectories corresponding to each question')
+                      help = '根测试目录,包含与每个问题对应的子目录')
     parser.add_option('--student-code',
                       dest = 'studentCode',
                       default = projectParams.STUDENT_CODE_DEFAULT,
-                      help = 'comma separated list of student code files')
+                      help = '逗号分隔的学生代码文件列表')
     parser.add_option('--code-directory',
                     dest = 'codeRoot',
                     default = "",
-                    help = 'Root directory containing the student and testClass code')
+                    help = '包含 student 和 testClass 代码的根目录')
     parser.add_option('--test-case-code',
                       dest = 'testCaseCode',
                       default = projectParams.PROJECT_TEST_CLASSES,
-                      help = 'class containing testClass classes for this project')
+                      help = '包含此项目的 testClass 类的类')
     parser.add_option('--generate-solutions',
                       dest = 'generateSolutions',
                       action = 'store_true',
-                      help = 'Write solutions generated to .solution file')
+                      help = '将生成的解决方案写入 .solution 文件')
     parser.add_option('--edx-output',
                     dest = 'edxOutput',
                     action = 'store_true',
-                    help = 'Generate edX output files')
+                    help = '生成 edX 输出文件')
     parser.add_option('--gradescope-output',
                     dest = 'gsOutput',
                     action = 'store_true',
-                    help = 'Generate GradeScope output files')
+                    help = '生成 GradeScope 输出文件')
     parser.add_option('--mute',
                     dest = 'muteOutput',
                     action = 'store_true',
-                    help = 'Mute output from executing tests')
+                    help = '将执行测试的输出静音')
     parser.add_option('--print-tests', '-p',
                     dest = 'printTestCase',
                     action = 'store_true',
-                    help = 'Print each test case before running them.')
+                    help = '在运行每个测试用例之前打印它们.')
     parser.add_option('--test', '-t',
                       dest = 'runTest',
                       default = None,
-                      help = 'Run one particular test.  Relative to test root.')
+                      help = '运行一个特定的测试. 相对于测试根.')
     parser.add_option('--question', '-q',
                     dest = 'gradeQuestion',
                     default = None,
-                    help = 'Grade one particular question.')
+                    help = '一年级特定问题.')
     parser.add_option('--no-graphics',
                     dest = 'noGraphics',
                     action = 'store_true',
-                    help = 'No graphics display for pacman games.')
+                    help = '吃豆子游戏没有图形显示.')
     (options, args) = parser.parse_args(argv)
     return options
 
 
-# confirm we should author solution files
+# 确认我们应编写解决方案文件
 def confirmGenerate():
-    print('WARNING: this action will overwrite any solution files.')
-    print('Are you sure you want to proceed? (yes/no)')
+    print('WARNING: 此操作将覆盖任何解决方案文件.')
+    print('您确定要继续吗? (yes/no)')
     while True:
         ans = sys.stdin.readline().strip()
         if ans == 'yes':
@@ -94,13 +92,11 @@ def confirmGenerate():
         elif ans == 'no':
             sys.exit(0)
         else:
-            print('please answer either "yes" or "no"')
+            print('请回答“yes”或“no”')
 
 
-# TODO: Fix this so that it tracebacks work correctly
-# Looking at source of the traceback module, presuming it works
-# the same as the intepreters, it uses co_filename.  This is,
-# however, a readonly attribute.
+# TODO: 修复此问题,以便其回溯功能正常工作.查看回溯模块的源代码,
+# 假设其工作方式与解释器相同,则它使用co_filename.然而,这是一个只读属性.
 def setModuleName(module, filename):
     functionType = type(confirmGenerate)
     classType = type(optparse.Option)
@@ -113,15 +109,15 @@ def setModuleName(module, filename):
             setattr(o, '__file__', filename)
         elif type(o) == classType:
             setattr(o, '__file__', filename)
-            # TODO: assign member __file__'s?
+            # TODO: 将成员分配为 __file__ 的？
         #print(i, type(o))
 
 
-#from cStringIO import StringIO
+#从 cStringIO 导入 StringIO
 
 def loadModuleString(moduleSource):
-    # Below broken, imp doesn't believe its being passed a file:
-    #    ValueError: load_module arg#2 should be a file or None
+    # 下面坏了,IMP 不相信它正在传递文件:
+    #    ValueError: arg#2 应为文件或 None
     #
     #f = StringIO(moduleCodeDict[k])
     #tmp = imp.load_module(k, f, k, (".py", "r", imp.PY_SOURCE))
@@ -141,36 +137,35 @@ def loadModuleFile(moduleName, filePath):
 
 
 def readFile(path, root=""):
-    "Read file from disk at specified path and return as string"
+    "从指定路径的磁盘读取文件,并以字符串形式返回"
     with open(os.path.join(root, path), 'r') as handle:
         return handle.read()
 
 
 #######################################################################
-# Error Hint Map
+# 错误提示图
 #######################################################################
 
-# TODO: use these
+# TODO: 使用这些
 ERROR_HINT_MAP = {
   'q1': {
     "<type 'exceptions.IndexError'>": """
-      We noticed that your project threw an IndexError on q1.
-      While many things may cause this, it may have been from
-      assuming a certain number of successors from a state space
-      or assuming a certain number of actions available from a given
-      state. Try making your code more general (no hardcoded indices)
-      and submit again!
+      我们注意到您的项目在 q1 上抛出了一个 IndexError.
+      虽然许多事情可能导致这种情况,但它可能来自
+      假设来自状态空间的一定数量的继任者
+      或假设给定的可用操作数量
+      州.尝试使代码更通用(无硬编码索引)
+      并再次提交！
     """
   },
   'q3': {
       "<type 'exceptions.AttributeError'>": """
-        We noticed that your project threw an AttributeError on q3.
-        While many things may cause this, it may have been from assuming
-        a certain size or structure to the state space. For example, if you have
-        a line of code assuming that the state is (x, y) and we run your code
-        on a state space with (x, y, z), this error could be thrown. Try
-        making your code more general and submit again!
-
+        我们注意到您的项目在 q3 上抛出了一个 AttributeError.
+        虽然许多事情可能导致这种情况,但可能是由于假设
+        状态空间的一定大小或结构.例如,如果您有
+        一行代码,假设状态为 (x, y),我们运行您的代码
+        在具有 (x, y, z) 的状态空间上,可能会引发此错误.尝试
+        使您的代码更加通用并再次提交！
     """
   }
 }
@@ -217,41 +212,40 @@ def runTest(testName, moduleDict, printTestCase=False, display=None):
     if printTestCase:
         printTest(testDict, solutionDict)
 
-    # This is a fragile hack to create a stub grades object
+    # 这是一个脆弱的变通方法,用于创建一个存根(stub)成绩对象
     grades = grading.Grades(projectParams.PROJECT_NAME, [(None,0)])
     testCase.execute(grades, moduleDict, solutionDict)
 
 
-# returns all the tests you need to run in order to run question
+# 返回所有需要运行的测试,以便运行问题
 def getDepends(testParser, testRoot, question):
     allDeps = [question]
     questionDict = testParser.TestParser(os.path.join(testRoot, question, 'CONFIG')).parse()
     if 'depends' in questionDict:
         depends = questionDict['depends'].split()
         for d in depends:
-            # run dependencies first
+            # 首先运行依赖项
             allDeps = getDepends(testParser, testRoot, d) + allDeps
     return allDeps
 
-# get list of questions to grade
+# 获取待评分问题列表
 def getTestSubdirs(testParser, testRoot, questionToGrade):
     problemDict = testParser.TestParser(os.path.join(testRoot, 'CONFIG')).parse()
     if questionToGrade != None:
         questions = getDepends(testParser, testRoot, questionToGrade)
         if len(questions) > 1:
-            print('Note: due to dependencies, the following tests will be run: %s' % ' '.join(questions))
+            print('Note: 由于依赖关系,将运行以下测试:%s' % ' '.join(questions))
         return questions
     if 'order' in problemDict:
         return problemDict['order'].split()
     return sorted(os.listdir(testRoot))
 
 
-# evaluate student code
+# 评估学生代码
 def evaluate(generateSolutions, testRoot, moduleDict, exceptionMap=ERROR_HINT_MAP,
              edxOutput=False, muteOutput=False, gsOutput=False,
             printTestCase=False, questionToGrade=None, display=None):
-    # imports of testbench code.  note that the testClasses import must follow
-    # the import of student code due to dependencies
+    # 测试台代码的导入.请注意,由于依赖关系,testClasses 的导入必须在学生代码导入之后进行.
     import testParser
     import testClasses
     for module in moduleDict:
@@ -265,13 +259,13 @@ def evaluate(generateSolutions, testRoot, moduleDict, exceptionMap=ERROR_HINT_MA
         if not os.path.isdir(subdir_path) or q[0] == '.':
             continue
 
-        # create a question object
+        # 创建一个问题对象
         questionDict = testParser.TestParser(os.path.join(subdir_path, 'CONFIG')).parse()
         questionClass = getattr(testClasses, questionDict['class'])
         question = questionClass(questionDict, display)
         questionDicts[q] = questionDict
 
-        # load test cases into question
+        # 将测试用例加载到问题中
         tests = filter(lambda t: re.match('[^#~.].*\.test\Z', t), os.listdir(subdir_path))
         tests = map(lambda t: re.match('(.*)\.test\Z', t).group(1), tests)
         for t in sorted(tests):
@@ -286,10 +280,10 @@ def evaluate(generateSolutions, testRoot, moduleDict, exceptionMap=ERROR_HINT_MA
             testCase = testClass(question, testDict)
             def makefun(testCase, solution_file):
                 if generateSolutions:
-                    # write solution file to disk
+                    # 将解决方案文件写入磁盘
                     return lambda grades: testCase.writeSolution(moduleDict, solution_file)
                 else:
-                    # read in solution dictionary and pass as an argument
+                    # 读取解决方案字典并将其作为参数传递
                     testDict = testParser.TestParser(test_file).parse()
                     solutionDict = testParser.TestParser(solution_file).parse()
                     if printTestCase:
@@ -298,7 +292,7 @@ def evaluate(generateSolutions, testRoot, moduleDict, exceptionMap=ERROR_HINT_MA
                         return lambda grades: testCase.execute(grades, moduleDict, solutionDict)
             question.addTestCase(testCase, makefun(testCase, solution_file))
 
-        # Note extra function is necessary for scoping reasons
+        # 注意,由于作用域原因,需要额外的函数
         def makefun(question):
             return lambda grades: question.execute(grades)
         setattr(sys.modules[__name__], q, makefun(question))

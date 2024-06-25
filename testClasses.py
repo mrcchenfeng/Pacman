@@ -1,30 +1,27 @@
 # testClasses.py
 # --------------
-# Licensing Information:  You are free to use or extend these projects for
-# educational purposes provided that (1) you do not distribute or publish
-# solutions, (2) you retain this notice, and (3) you provide clear
-# attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
+#许可信息:您可以出于教育目的自由使用或扩展这些项目,前提是
+# (1)您不散发或发布解决方案,
+# (2)您保留本声明,以及
+# (3)您提供明确的加州大学伯克利分校归属,包括指向 http://ai.berkeley.edu 的链接.
 # 
-# Attribution Information: The Pacman AI projects were developed at UC Berkeley.
-# The core projects and autograders were primarily created by John DeNero
-# (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
-# Student side autograding was added by Brad Miller, Nick Hay, and
-# Pieter Abbeel (pabbeel@cs.berkeley.edu).
+# 归属信息:吃豆人AI项目是在加州大学伯克利分校开发的.
+# 核心项目和自动评分器主要由John DeNero(denero@cs.berkeley.edu)和Dan Klein(klein@cs.berkeley.edu)创建.
+# 学生端自动评分由Brad Miller、Nick Hay和Pieter Abbeel(pabbeel@cs.berkeley.edu)添加.
 
 
-# import modules from python standard library
+# 从 Python 标准库导入模块
 import inspect
 import re
 import sys
 
 
-# Class which models a question in a project.  Note that questions have a
-# maximum number of points they are worth, and are composed of a series of
-# test cases
+# 一个类,用于在项目中模拟问题.请注意,
+# 问题具有它们所值得的最大分数,并且由一系列测试用例组成.
 class Question(object):
 
     def raiseNotDefined(self):
-        print('Method not implemented: %s' % inspect.stack()[1][3])
+        print('方法未实现: %s' % inspect.stack()[1][3])
         sys.exit(1)
 
     def __init__(self, questionDict, display):
@@ -38,19 +35,19 @@ class Question(object):
     def getMaxPoints(self):
         return self.maxPoints
 
-    # Note that 'thunk' must be a function which accepts a single argument,
-    # namely a 'grading' object
+    # 请注意,“thunk”必须是接受单个参数的函数,
+    # 即 'grading' 对象
     def addTestCase(self, testCase, thunk):
         self.testCases.append((testCase, thunk))
 
     def execute(self, grades):
         self.raiseNotDefined()
 
-# Question in which all test cases must be passed in order to receive credit
+# 必须通过所有测试用例才能获得学分的问题
 class PassAllTestsQuestion(Question):
 
     def execute(self, grades):
-        # TODO: is this the right way to use grades?  The autograder doesn't seem to use it.
+        # TODO: 这是使用成绩的正确方法吗？ 自动评分器似乎没有使用它.
         testsFailed = False
         grades.assignZeroCredit()
         for _, f in self.testCases:
@@ -67,7 +64,7 @@ class ExtraCreditPassAllTestsQuestion(Question):
         self.extraPoints = int(questionDict['extra_points'])
 
     def execute(self, grades):
-        # TODO: is this the right way to use grades?  The autograder doesn't seem to use it.
+        # TODO: 这是使用成绩的正确方法吗？ 自动评分器似乎没有使用它.
         testsFailed = False
         grades.assignZeroCredit()
         for _, f in self.testCases:
@@ -79,12 +76,12 @@ class ExtraCreditPassAllTestsQuestion(Question):
             grades.assignFullCredit()
             grades.addPoints(self.extraPoints)
 
-# Question in which predict credit is given for test cases with a ``points'' property.
-# All other tests are mandatory and must be passed.
+# 对于具有“points”属性的测试用例,在其中给出预测信用的问题.
+# 所有其他测试都是强制性的,必须通过.
 class HackedPartialCreditQuestion(Question):
 
     def execute(self, grades):
-        # TODO: is this the right way to use grades?  The autograder doesn't seem to use it.
+        # TODO: 这是使用成绩的正确方法吗？ 自动评分器似乎没有使用它.
         grades.assignZeroCredit()
 
         points = 0
@@ -96,7 +93,7 @@ class HackedPartialCreditQuestion(Question):
             else:
                 passed = passed and testResult
 
-        ## FIXME: Below terrible hack to match q3's logic
+        ## FIXME: 下面可怕的黑客匹配 q3 的逻辑
         if int(points) == self.maxPoints and not passed:
             grades.assignZeroCredit()
         else:
@@ -104,8 +101,8 @@ class HackedPartialCreditQuestion(Question):
 
 
 class Q6PartialCreditQuestion(Question):
-    """Fails any test which returns False, otherwise doesn't effect the grades object.
-    Partial credit tests will add the required points."""
+    """未通过任何返回 False 的测试,否则不会影响 grades 对象.
+    部分信用测试将增加所需的分数."""
 
     def execute(self, grades):
         grades.assignZeroCredit()
@@ -117,8 +114,8 @@ class Q6PartialCreditQuestion(Question):
             grades.assignZeroCredit()
 
 class PartialCreditQuestion(Question):
-    """Fails any test which returns False, otherwise doesn't effect the grades object.
-    Partial credit tests will add the required points."""
+    """未通过任何返回 False 的测试,否则不会影响 grades 对象.
+    部分信用测试将增加所需的分数."""
 
     def execute(self, grades):
         grades.assignZeroCredit()
@@ -132,7 +129,7 @@ class PartialCreditQuestion(Question):
 
 
 class NumberPassedQuestion(Question):
-    """Grade is the number of test cases passed."""
+    """等级是通过的测试用例数."""
 
     def execute(self, grades):
         grades.addPoints([f(grades) for _, f in self.testCases].count(True))
@@ -141,11 +138,11 @@ class NumberPassedQuestion(Question):
 
 
 
-# Template modeling a generic test case
+# 通用测试用例的模板建模
 class TestCase(object):
 
     def raiseNotDefined(self):
-        print('Method not implemented: %s' % inspect.stack()[1][3])
+        print('方法未实现: %s' % inspect.stack()[1][3])
         sys.exit(1)
 
     def getPath(self):
@@ -167,12 +164,12 @@ class TestCase(object):
         self.raiseNotDefined()
         return True
 
-    # Tests should call the following messages for grading
-    # to ensure a uniform format for test output.
+    # 测试应调用以下消息进行评分
+    # 保证测试输出格式统一.
     #
-    # TODO: this is hairy, but we need to fix grading.py's interface
-    # to get a nice hierarchical project - question - test structure,
-    # then these should be moved into Question proper.
+    # TODO: 这有点棘手,但我们需要修复grading.py的接口
+    # 为了得到一个漂亮的分层项目 - 问题 - 测试结构,
+    # 那么这些应该被移到问题中.
     def testPass(self, grades):
         grades.addMessage('PASS: %s' % (self.path,))
         for line in self.messages:
@@ -185,7 +182,7 @@ class TestCase(object):
             grades.addMessage('    %s' % (line,))
         return False
 
-    # This should really be question level?
+    # 这真的应该是问题级别的吗？
     #
     def testPartial(self, grades, points, maxPoints):
         grades.addPoints(points)

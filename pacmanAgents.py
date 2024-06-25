@@ -1,15 +1,13 @@
 # pacmanAgents.py
 # ---------------
-# Licensing Information:  You are free to use or extend these projects for
-# educational purposes provided that (1) you do not distribute or publish
-# solutions, (2) you retain this notice, and (3) you provide clear
-# attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
+#许可信息:您可以出于教育目的自由使用或扩展这些项目,前提是
+# (1)您不散发或发布解决方案,
+# (2)您保留本声明,以及
+# (3)您提供明确的加州大学伯克利分校归属,包括指向 http://ai.berkeley.edu 的链接.
 # 
-# Attribution Information: The Pacman AI projects were developed at UC Berkeley.
-# The core projects and autograders were primarily created by John DeNero
-# (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
-# Student side autograding was added by Brad Miller, Nick Hay, and
-# Pieter Abbeel (pabbeel@cs.berkeley.edu).
+# 归属信息:吃豆人AI项目是在加州大学伯克利分校开发的.
+# 核心项目和自动评分器主要由John DeNero(denero@cs.berkeley.edu)和Dan Klein(klein@cs.berkeley.edu)创建.
+# 学生端自动评分由Brad Miller、Nick Hay和Pieter Abbeel(pabbeel@cs.berkeley.edu)添加.
 
 
 from pacman import Directions
@@ -19,7 +17,7 @@ import game
 import util
 
 class LeftTurnAgent(game.Agent):
-    "An agent that turns left at every opportunity"
+    "一有机会就左转的Agent"
 
     def getAction(self, state):
         legal = state.getLegalPacmanActions()
@@ -38,7 +36,7 @@ class GreedyAgent(Agent):
         assert self.evaluationFunction != None
 
     def getAction(self, state):
-        # Generate candidate actions
+        # 生成候选操作
         legal = state.getLegalPacmanActions()
         if Directions.STOP in legal: legal.remove(Directions.STOP)
 

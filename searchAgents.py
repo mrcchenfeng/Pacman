@@ -1,37 +1,35 @@
 # searchAgents.py
 # ---------------
-# Licensing Information:  You are free to use or extend these projects for
-# educational purposes provided that (1) you do not distribute or publish
-# solutions, (2) you retain this notice, and (3) you provide clear
-# attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
+#许可信息:您可以出于教育目的自由使用或扩展这些项目,前提是
+# (1)您不散发或发布解决方案,
+# (2)您保留本声明,以及
+# (3)您提供明确的加州大学伯克利分校归属,包括指向 http://ai.berkeley.edu 的链接.
 # 
-# Attribution Information: The Pacman AI projects were developed at UC Berkeley.
-# The core projects and autograders were primarily created by John DeNero
-# (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
-# Student side autograding was added by Brad Miller, Nick Hay, and
-# Pieter Abbeel (pabbeel@cs.berkeley.edu).
+# 归属信息:吃豆人AI项目是在加州大学伯克利分校开发的.
+# 核心项目和自动评分器主要由John DeNero(denero@cs.berkeley.edu)和Dan Klein(klein@cs.berkeley.edu)创建.
+# 学生端自动评分由Brad Miller、Nick Hay和Pieter Abbeel(pabbeel@cs.berkeley.edu)添加.
 
 
 """
-This file contains all of the agents that can be selected to control Pacman.  To
-select an agent, use the '-p' option when running pacman.py.  Arguments can be
-passed to your agent using '-a'.  For example, to load a SearchAgent that uses
-depth first search (dfs), run the following command:
+此文件包含所有可以选择来控制 Pacman 的Agent. 自
+选择一个Agent,在运行 pacman.py 时使用“-p”选项. 参数可以是
+使用“-a”传递给Agent. 例如,要加载使用
+深度优先搜索 (DFS),运行以下命令:
 
 > python pacman.py -p SearchAgent -a fn=depthFirstSearch
 
-Commands to invoke other search strategies can be found in the project
-description.
+可以在项目中找到调用其他搜索策略的命令
+描述.
 
-Please only change the parts of the file you are asked to.  Look for the lines
-that say
+请仅更改要求您更改的文件部分. 寻找线条
+也就是说
 
-"*** YOUR CODE HERE ***"
+"*** 您的代码在这里 ***"
 
-The parts you fill in start about 3/4 of the way down.  Follow the project
-description for details.
+您填写的部分从大约 3/4 开始. 关注项目
+有关详细信息,请说明.
 
-Good luck and happy searching!
+祝你好运,搜索愉快!
 """
 
 from typing import List, Tuple, Any
@@ -44,46 +42,45 @@ import search
 import pacman
 
 class GoWestAgent(Agent):
-    "An agent that goes West until it can't."
+    "一个向西走直到它不能的特工."
 
     def getAction(self, state):
-        "The agent receives a GameState (defined in pacman.py)."
+        "Agent接收 GameState(在 pacman.py 中定义)."
         if Directions.WEST in state.getLegalPacmanActions():
             return Directions.WEST
         else:
             return Directions.STOP
 
 #######################################################
-# This portion is written for you, but will only work #
-#       after you fill in parts of search.py          #
+#             这部分是为你写的,但只会起作用             #
+#               填写部分 search.py 后                  #
 #######################################################
 
 class SearchAgent(Agent):
     """
-    This very general search agent finds a path using a supplied search
-    algorithm for a supplied search problem, then returns actions to follow that
-    path.
+    这个非常通用的搜索Agent使用提供的搜索来查找路径
+    算法,然后返回操作以遵循该
+    路径.
 
-    As a default, this agent runs DFS on a PositionSearchProblem to find
-    location (1,1)
+    默认情况下,此Agent在 PositionSearchProblem 上运行 DFS 以查找
+    位置 (1,1)
+    fn 的选项包括:
+      depthFirstSearch 或 dfs
+      breadthFirstSearch 或 bfs
 
-    Options for fn include:
-      depthFirstSearch or dfs
-      breadthFirstSearch or bfs
 
-
-    Note: You should NOT change any code in SearchAgent
+    Note: 您不应更改 SearchAgent 中的任何代码
     """
 
     def __init__(self, fn='depthFirstSearch', prob='PositionSearchProblem', heuristic='nullHeuristic'):
-        # Warning: some advanced Python magic is employed below to find the right functions and problems
+        # 警告:下面采用了一些高级 Python 魔法来找到正确的函数和问题
 
-        # Get the search function from the name and heuristic
+        # 从名称和启发式中获取搜索函数
         if fn not in dir(search):
-            raise AttributeError(fn + ' is not a search function in search.py.')
+            raise AttributeError(fn + ' 不是 search.py 中的搜索功能.')
         func = getattr(search, fn)
         if 'heuristic' not in func.__code__.co_varnames:
-            print('[SearchAgent] using function ' + fn)
+            print('[SearchAgent] 使用函数 ' + fn)
             self.searchFunction = func
         else:
             if heuristic in globals().keys():
@@ -91,43 +88,43 @@ class SearchAgent(Agent):
             elif heuristic in dir(search):
                 heur = getattr(search, heuristic)
             else:
-                raise AttributeError(heuristic + ' is not a function in searchAgents.py or search.py.')
-            print('[SearchAgent] using function %s and heuristic %s' % (fn, heuristic))
+                raise AttributeError(heuristic + ' 不是 searchAgents.py 或 search.py 中的函数.')
+            print('[SearchAgent] 使用函数 %s 和启发式 %s' % (fn, heuristic))
             # Note: this bit of Python trickery combines the search algorithm and the heuristic
             self.searchFunction = lambda x: func(x, heuristic=heur)
 
         # Get the search problem type from the name
         if prob not in globals().keys() or not prob.endswith('Problem'):
-            raise AttributeError(prob + ' is not a search problem type in SearchAgents.py.')
+            raise AttributeError(prob + ' 不是 SearchAgents.py 中的搜索问题类型.')
         self.searchType = globals()[prob]
-        print('[SearchAgent] using problem type ' + prob)
+        print('[SearchAgent] 使用问题类型' + prob)
 
     def registerInitialState(self, state):
         """
-        This is the first time that the agent sees the layout of the game
-        board. Here, we choose a path to the goal. In this phase, the agent
-        should compute the path to the goal and store it in a local variable.
-        All of the work is done in this method!
+        这是Agent第一次看到游戏的布局
+        板.在这里,我们选择一条通往目标的道路.在此阶段,Agent
+        应该计算目标的路径并将其存储在局部变量中.
+        所有的工作都是用这种方法完成的！
 
-        state: a GameState object (pacman.py)
+        state: a GameState 对象 (pacman.py)
         """
-        if self.searchFunction == None: raise Exception("No search function provided for SearchAgent")
+        if self.searchFunction == None: raise Exception("没有为 SearchAgent 提供搜索功能")
         starttime = time.time()
-        problem = self.searchType(state) # Makes a new search problem
-        self.actions  = self.searchFunction(problem) # Find a path
+        problem = self.searchType(state) # 提出新的搜索问题
+        self.actions  = self.searchFunction(problem) # 查找路径
         if self.actions == None:
             self.actions = []
         totalCost = problem.getCostOfActions(self.actions)
-        print('Path found with total cost of %d in %.1f seconds' % (totalCost, time.time() - starttime))
-        if '_expanded' in dir(problem): print('Search nodes expanded: %d' % problem._expanded)
+        print('找到的总成本为 %d 的路径,以 %.1f 秒为单位' % (totalCost, time.time() - starttime))
+        if '_expanded' in dir(problem): print('扩展的搜索节点: %d' % problem._expanded)
 
     def getAction(self, state):
         """
-        Returns the next action in the path chosen earlier (in
-        registerInitialState).  Return Directions.STOP if there is no further
-        action to take.
+        返回前面选择的路径中的下一个操作 (在
+        registerInitialState). 返回 Directions.STOP 如果没有进一步的
+        要采取的行动.
 
-        state: a GameState object (pacman.py)
+        state: a GameState 对象 (pacman.py)
         """
         if 'actionIndex' not in dir(self): self.actionIndex = 0
         i = self.actionIndex
@@ -139,22 +136,22 @@ class SearchAgent(Agent):
 
 class PositionSearchProblem(search.SearchProblem):
     """
-    A search problem defines the state space, start state, goal test, successor
-    function and cost function.  This search problem can be used to find paths
-    to a particular point on the pacman board.
+    搜索问题定义了状态空间、开始状态、目标测试、后继者
+    函数和成本函数. 此搜索问题可用于查找路径
+    到吃豆板上的特定点.
 
-    The state space consists of (x,y) positions in a pacman game.
+    状态空间由吃豆子游戏中的 (x,y) 位置组成.
 
-    Note: this search problem is fully specified; you should NOT change it.
+    Note: 这个搜索问题是完全指定的;你不应该改变它.
     """
 
     def __init__(self, gameState, costFn = lambda x: 1, goal=(1,1), start=None, warn=True, visualize=True):
         """
-        Stores the start and goal.
+        存储开始和目标.
 
-        gameState: A GameState object (pacman.py)
-        costFn: A function from a search state (tuple) to a non-negative number
-        goal: A position in the gameState
+        gameState: 一个 GameState 对象 (pacman.py)
+        costFn: 从搜索状态(元组)到非负数的函数
+        goal: gameState 中的位置
         """
         self.walls = gameState.getWalls()
         self.startState = gameState.getPacmanPosition()
@@ -163,10 +160,10 @@ class PositionSearchProblem(search.SearchProblem):
         self.costFn = costFn
         self.visualize = visualize
         if warn and (gameState.getNumFood() != 1 or not gameState.hasFood(*goal)):
-            print('Warning: this does not look like a regular search maze')
+            print('警告:这看起来不像一个普通的搜索迷宫')
 
-        # For display purposes
-        self._visited, self._visitedlist, self._expanded = {}, [], 0 # DO NOT CHANGE
+        # 用于展示目的
+        self._visited, self._visitedlist, self._expanded = {}, [], 0 # 不要更改
 
     def getStartState(self):
         return self.startState
@@ -174,7 +171,7 @@ class PositionSearchProblem(search.SearchProblem):
     def isGoalState(self, state):
         isGoal = state == self.goal
 
-        # For display purposes only
+        # 仅供展示之用
         if isGoal and self.visualize:
             self._visitedlist.append(state)
             import __main__
@@ -186,14 +183,13 @@ class PositionSearchProblem(search.SearchProblem):
 
     def getSuccessors(self, state):
         """
-        Returns successor states, the actions they require, and a cost of 1.
-
-         As noted in search.py:
-             For a given state, this should return a list of triples,
-         (successor, action, stepCost), where 'successor' is a
-         successor to the current state, 'action' is the action
-         required to get there, and 'stepCost' is the incremental
-         cost of expanding to that successor
+        返回后续状态、它们需要的操作以及 1 的成本.
+         如 search.py 所述:
+             对于给定状态,这应该返回一个三元组列表,
+         (successor, action, stepCost), 其中“successor”是
+         当前状态的继承者,“行动”是行动
+         需要到达那里,而“stepCost”是增量
+         扩展到该继任者的成本
         """
 
         successors = []
@@ -206,8 +202,8 @@ class PositionSearchProblem(search.SearchProblem):
                 cost = self.costFn(nextState)
                 successors.append( ( nextState, action, cost) )
 
-        # Bookkeeping for display purposes
-        self._expanded += 1 # DO NOT CHANGE
+        # 用于展示目的的簿记
+        self._expanded += 1 # 不要更改
         if state not in self._visited:
             self._visited[state] = True
             self._visitedlist.append(state)
@@ -216,14 +212,13 @@ class PositionSearchProblem(search.SearchProblem):
 
     def getCostOfActions(self, actions):
         """
-        Returns the cost of a particular sequence of actions. If those actions
-        include an illegal move, return 999999.
+        返回特定动作序列的成本.如果这些动作包括非法移动,则返回999999.
         """
         if actions == None: return 999999
         x,y= self.getStartState()
         cost = 0
         for action in actions:
-            # Check figure out the next state and see whether its' legal
+            # 检查找出下一个状态,看看它是否合法
             dx, dy = Actions.directionToVector(action)
             x, y = int(x + dx), int(y + dy)
             if self.walls[x][y]: return 999999
@@ -232,10 +227,9 @@ class PositionSearchProblem(search.SearchProblem):
 
 class StayEastSearchAgent(SearchAgent):
     """
-    An agent for position search with a cost function that penalizes being in
-    positions on the West side of the board.
+    一个用于位置搜索的Agent,其成本函数会对位于棋盘西侧的位置进行惩罚.
 
-    The cost function for stepping into a position (x,y) is 1/2^x.
+    踏入仓位 (x,y) 的成本函数为 1/2^x.
     """
     def __init__(self):
         self.searchFunction = search.uniformCostSearch
@@ -244,10 +238,9 @@ class StayEastSearchAgent(SearchAgent):
 
 class StayWestSearchAgent(SearchAgent):
     """
-    An agent for position search with a cost function that penalizes being in
-    positions on the East side of the board.
+    一个用于位置搜索的Agent,其成本函数会对位于棋盘东侧的位置进行惩罚.
 
-    The cost function for stepping into a position (x,y) is 2^x.
+    踏入仓位 (x,y) 的成本函数为 2^x.
     """
     def __init__(self):
         self.searchFunction = search.uniformCostSearch
@@ -255,31 +248,31 @@ class StayWestSearchAgent(SearchAgent):
         self.searchType = lambda state: PositionSearchProblem(state, costFn)
 
 def manhattanHeuristic(position, problem, info={}):
-    "The Manhattan distance heuristic for a PositionSearchProblem"
+    "PositionSearchProblem 的曼哈顿距离启发式"
     xy1 = position
     xy2 = problem.goal
     return abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])
 
 def euclideanHeuristic(position, problem, info={}):
-    "The Euclidean distance heuristic for a PositionSearchProblem"
+    "PositionSearchProblem 的欧几里得距离启发式"
     xy1 = position
     xy2 = problem.goal
     return ( (xy1[0] - xy2[0]) ** 2 + (xy1[1] - xy2[1]) ** 2 ) ** 0.5
 
 #####################################################
-# This portion is incomplete.  Time to write code!  #
+#         这部分是不完整的. 是时候编写代码了!         #
 #####################################################
 
 class CornersProblem(search.SearchProblem):
     """
-    This search problem finds paths through all four corners of a layout.
+    此搜索问题查找穿过布局所有四个角的路径.
 
-    You must select a suitable state space and successor function
+    您必须选择合适的状态空间和后续函数
     """
 
     def __init__(self, startingGameState: pacman.GameState):
         """
-        Stores the walls, pacman's starting position and corners.
+        存储墙壁、吃豆人的起始位置和角落.
         """
         self.walls = startingGameState.getWalls()
         self.startingPosition = startingGameState.getPacmanPosition()
@@ -287,53 +280,54 @@ class CornersProblem(search.SearchProblem):
         self.corners = ((1,1), (1,top), (right, 1), (right, top))
         for corner in self.corners:
             if not startingGameState.hasFood(*corner):
-                print('Warning: no food in corner ' + str(corner))
-        self._expanded = 0 # DO NOT CHANGE; Number of search nodes expanded
+                print('警告:角落里没有食物 ' + str(corner))
+        self._expanded = 0 # 不要改变;扩展的搜索节点数
 
     def getStartState(self):
         """
-        Returns the start state (in your state space, not the full Pacman state
-        space)
+        返回开始状态(在状态空间中,而不是完整的 Pacman 状态
+        空间)
         """
-        "*** YOUR CODE HERE ***"
+        "*** 您的代码在这里 ***"
         util.raiseNotDefined()
 
     def isGoalState(self, state: Any):
         """
-        Returns whether this search state is a goal state of the problem.
+        返回此搜索状态是否为问题的目标状态.
         """
-        "*** YOUR CODE HERE ***"
+        "*** 您的代码在这里 ***"
         util.raiseNotDefined()
 
     def getSuccessors(self, state: Any):
         """
-        Returns successor states, the actions they require, and a cost of 1.
+        返回继承国、它们需要的操作以及 1 的成本.
 
-         As noted in search.py:
-            For a given state, this should return a list of triples, (successor,
-            action, stepCost), where 'successor' is a successor to the current
-            state, 'action' is the action required to get there, and 'stepCost'
-            is the incremental cost of expanding to that successor
+         如 search.py 所述:
+            对于给定状态,这应该返回一个三元组列表,(successor,
+            action, stepCost),其中 'successor' 是当前
+            状态,“action”是到达那里所需的操作,“stepCost”
+            是扩展到该继任者的增量成本
         """
 
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-            # Add a successor state to the successor list if the action is legal
-            # Here's a code snippet for figuring out whether a new position hits a wall:
-            #   x,y = currentPosition
-            #   dx, dy = Actions.directionToVector(action)
-            #   nextx, nexty = int(x + dx), int(y + dy)
-            #   hitsWall = self.walls[nextx][nexty]
+            # 如果动作是合法的,则将后继状态添加到后继列表中.
+            # 以下是一个代码片段,用于判断新位置是否撞到墙上:
+            # x, y = currentPosition  
+            # dx, dy = Actions.directionToVector(action)  
+            # nextx, nexty = int(x + dx), int(y + dy)  
+            # hitsWall = self.walls[nextx][nexty]
 
-            "*** YOUR CODE HERE ***"
 
-        self._expanded += 1 # DO NOT CHANGE
+            "*** 您的代码在这里 ***"
+
+        self._expanded += 1 # 不要更改
         return successors
 
     def getCostOfActions(self, actions):
         """
-        Returns the cost of a particular sequence of actions.  If those actions
-        include an illegal move, return 999999.  This is implemented for you.
+        这个函数返回特定动作序列的成本.如果这些动作包括非法的移动,
+        则返回 999999.这个函数已经为你实现了
         """
         if actions == None: return 999999
         x,y= self.startingPosition
@@ -346,44 +340,44 @@ class CornersProblem(search.SearchProblem):
 
 def cornersHeuristic(state: Any, problem: CornersProblem):
     """
-    A heuristic for the CornersProblem that you defined.
+    您定义的 CornersProblem 的启发式方法.
 
-      state:   The current search state
-               (a data structure you chose in your search problem)
+      state:   当前搜索状态
+               (您在搜索问题中选择的数据结构)
 
-      problem: The CornersProblem instance for this layout.
+      problem: 此布局的 CornersProblem 实例.
 
-    This function should always return a number that is a lower bound on the
-    shortest path from the state to a goal of the problem; i.e.  it should be
-    admissible (as well as consistent).
+    此函数应始终返回一个数字,该数字是
+    从状态到问题目标的最短路径;即 它应该是
+    可接受(以及一致).
     """
-    corners = problem.corners # These are the corner coordinates
-    walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
+    corners = problem.corners # 这些是拐角坐标
+    walls = problem.walls # 这些是迷宫的墙壁,作为网格(game.py)
 
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    return 0 # 默认为简单解决方案
 
 class AStarCornersAgent(SearchAgent):
-    "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
+    "使用 A* 和 foodHeuristic 的 FoodSearchProblem 的 SearchAgent"
     def __init__(self):
         self.searchFunction = lambda prob: search.aStarSearch(prob, cornersHeuristic)
         self.searchType = CornersProblem
 
 class FoodSearchProblem:
     """
-    A search problem associated with finding the a path that collects all of the
-    food (dots) in a Pacman game.
+    查找收集所有与
+    吃豆人游戏中的食物(点).
 
-    A search state in this problem is a tuple ( pacmanPosition, foodGrid ) where
-      pacmanPosition: a tuple (x,y) of integers specifying Pacman's position
-      foodGrid:       a Grid (see game.py) of either True or False, specifying remaining food
+    此问题中的搜索状态是一个元组(pacmanPosition, foodGrid),其中
+      pacmanPosition: 指定 Pacman 位置的整数元组 (x,y)
+      foodGrid:       a True或False的网格(见 game.py),指定剩余食物
     """
     def __init__(self, startingGameState: pacman.GameState):
         self.start = (startingGameState.getPacmanPosition(), startingGameState.getFood())
         self.walls = startingGameState.getWalls()
         self.startingGameState = startingGameState
-        self._expanded = 0 # DO NOT CHANGE
-        self.heuristicInfo = {} # A dictionary for the heuristic to store information
+        self._expanded = 0 # 不要更改
+        self.heuristicInfo = {} # 用于启发式存储信息的字典
 
     def getStartState(self):
         return self.start
@@ -392,9 +386,9 @@ class FoodSearchProblem:
         return state[1].count() == 0
 
     def getSuccessors(self, state):
-        "Returns successor states, the actions they require, and a cost of 1."
+        "返回继承国、它们需要的操作以及 1 的成本."
         successors = []
-        self._expanded += 1 # DO NOT CHANGE
+        self._expanded += 1 # 不要更改
         for direction in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             x,y = state[0]
             dx, dy = Actions.directionToVector(direction)
@@ -406,8 +400,8 @@ class FoodSearchProblem:
         return successors
 
     def getCostOfActions(self, actions):
-        """Returns the cost of a particular sequence of actions.  If those actions
-        include an illegal move, return 999999"""
+        """这个函数返回特定动作序列的成本.
+        如果这些动作包括非法移动,则返回999999."""
         x,y= self.getStartState()[0]
         cost = 0
         for action in actions:
@@ -420,119 +414,117 @@ class FoodSearchProblem:
         return cost
 
 class AStarFoodSearchAgent(SearchAgent):
-    "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
+    "使用 A* 和 foodHeuristic 的 FoodSearchProblem 的 SearchAgent"
     def __init__(self):
         self.searchFunction = lambda prob: search.aStarSearch(prob, foodHeuristic)
         self.searchType = FoodSearchProblem
 
 def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     """
-    Your heuristic for the FoodSearchProblem goes here.
+    FoodSearchProblem 的启发式方法位于此处.
 
-    This heuristic must be consistent to ensure correctness.  First, try to come
-    up with an admissible heuristic; almost all admissible heuristics will be
-    consistent as well.
+    这种启发式方法必须保持一致,以确保正确性. 首先,试着来
+    提出可接受的启发式方法;几乎所有可接受的启发式方法都是
+    也始终如一.
 
-    If using A* ever finds a solution that is worse uniform cost search finds,
-    your heuristic is *not* consistent, and probably not admissible!  On the
-    other hand, inadmissible or inconsistent heuristics may find optimal
-    solutions, so be careful.
+    如果使用 A* 找到更差的解决方案,则统一成本搜索会发现,
+    你的启发式方法*不*一致,可能不可接受！ 在
+    另一方面,不可接受或不一致的启发式方法可能会找到最佳
+    解决方案,所以要小心.
 
-    The state is a tuple ( pacmanPosition, foodGrid ) where foodGrid is a Grid
-    (see game.py) of either True or False. You can call foodGrid.asList() to get
-    a list of food coordinates instead.
+    状态是一个元组(pacmanPosition, foodGrid),其中 foodGrid 是一个网格
+    (参见 game.py) 的 True 或 False.你可以调用 foodGrid.asList() 来获取
+    取而代之的是食物坐标列表.
 
-    If you want access to info like walls, capsules, etc., you can query the
-    problem.  For example, problem.walls gives you a Grid of where the walls
-    are.
+    如果您想访问墙壁、胶囊等信息,您可以查询
+    问题. 例如,problem.walls 为您提供了墙壁位置的网格
+    是.
 
-    If you want to *store* information to be reused in other calls to the
-    heuristic, there is a dictionary called problem.heuristicInfo that you can
-    use. For example, if you only want to count the walls once and store that
-    value, try: problem.heuristicInfo['wallCount'] = problem.walls.count()
-    Subsequent calls to this heuristic can access
+    如果要*存储*信息以在其他调用中重用
+    启发式,有一个名为 problem.heuristicInfo 的字典,您可以
+    用.例如,如果您只想计算一次墙壁并将其存储
+    值,请尝试: problem.heuristicInfo['wallCount'] = problem.walls.count()
+    对此启发式方法的后续调用可以访问
     problem.heuristicInfo['wallCount']
     """
     position, foodGrid = state
-    "*** YOUR CODE HERE ***"
+    "*** 您的代码在这里 ***"
     return 0
 
 class ClosestDotSearchAgent(SearchAgent):
-    "Search for all food using a sequence of searches"
+    "使用一系列搜索搜索所有食物"
     def registerInitialState(self, state):
         self.actions = []
         currentState = state
         while(currentState.getFood().count() > 0):
-            nextPathSegment = self.findPathToClosestDot(currentState) # The missing piece
+            nextPathSegment = self.findPathToClosestDot(currentState) # 缺失的一块
             self.actions += nextPathSegment
             for action in nextPathSegment:
                 legal = currentState.getLegalActions()
                 if action not in legal:
                     t = (str(action), str(currentState))
-                    raise Exception('findPathToClosestDot returned an illegal move: %s!\n%s' % t)
+                    raise Exception('findPathToClosestDot 返回了非法移动:%s！\n%s' % t)
                 currentState = currentState.generateSuccessor(0, action)
         self.actionIndex = 0
-        print('Path found with cost %d.' % len(self.actions))
+        print('找到成本为 %d 的路径.' % len(self.actions))
 
     def findPathToClosestDot(self, gameState: pacman.GameState):
         """
-        Returns a path (a list of actions) to the closest dot, starting from
-        gameState.
+        返回最近点的路径(操作列表),从 gameState 开始.
         """
-        # Here are some useful elements of the startState
+        # 下面是 startState 的一些有用元素
         startPosition = gameState.getPacmanPosition()
         food = gameState.getFood()
         walls = gameState.getWalls()
         problem = AnyFoodSearchProblem(gameState)
 
-        "*** YOUR CODE HERE ***"
+        "*** 您的代码在这里 ***"
         util.raiseNotDefined()
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
-    A search problem for finding a path to any food.
+    寻找通往任何食物的路径的搜索问题.
 
-    This search problem is just like the PositionSearchProblem, but has a
-    different goal test, which you need to fill in below.  The state space and
-    successor function do not need to be changed.
+    此搜索问题与 PositionSearchProblem 类似,但具有
+    不同的目标测试,您需要在下面填写. 状态空间和
+    后继函数无需更改.
 
-    The class definition above, AnyFoodSearchProblem(PositionSearchProblem),
-    inherits the methods of the PositionSearchProblem.
+    上面的类定义,AnyFoodSearchProblem(PositionSearchProblem),
+    继承 PositionSearchProblem 的方法.
 
-    You can use this search problem to help you fill in the findPathToClosestDot
-    method.
+    您可以使用此搜索问题来帮助您填写 findPathToClosestDot
+    方法.
     """
 
     def __init__(self, gameState):
-        "Stores information from the gameState.  You don't need to change this."
-        # Store the food for later reference
+        "存储来自 gameState 的信息. 您无需更改此设置."
+        # 储存食物以备后用
         self.food = gameState.getFood()
 
-        # Store info for the PositionSearchProblem (no need to change this)
+        # 存储 PositionSearchProblem 的信息(无需更改此信息)
         self.walls = gameState.getWalls()
         self.startState = gameState.getPacmanPosition()
         self.costFn = lambda x: 1
-        self._visited, self._visitedlist, self._expanded = {}, [], 0 # DO NOT CHANGE
+        self._visited, self._visitedlist, self._expanded = {}, [], 0 # 不要更改
 
     def isGoalState(self, state: Tuple[int, int]):
         """
-        The state is Pacman's position. Fill this in with a goal test that will
-        complete the problem definition.
+        状态是吃豆子的位置.用目标测试填写它,它将
+        完成问题定义.
         """
         x,y = state
 
-        "*** YOUR CODE HERE ***"
+        "*** 您的代码在这里 ***"
         util.raiseNotDefined()
 
 def mazeDistance(point1: Tuple[int, int], point2: Tuple[int, int], gameState: pacman.GameState) -> int:
     """
-    Returns the maze distance between any two points, using the search functions
-    you have already built. The gameState can be any game state -- Pacman's
-    position in that state is ignored.
+    使用搜索函数返回任意两点之间的迷宫距离
+    你已经建造了.gameState 可以是任何游戏状态 -- Pacman 的
+    该状态下的位置将被忽略.
+    用法示例: mazeDistance( (2,4), (5,6), gameState)
 
-    Example usage: mazeDistance( (2,4), (5,6), gameState)
-
-    This might be a useful helper function for your ApproximateSearchAgent.
+    对于您的 ApproximateSearchAgent 来说,这可能是一个有用的帮助程序函数.
     """
     x1, y1 = point1
     x2, y2 = point2

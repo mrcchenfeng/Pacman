@@ -1,18 +1,16 @@
 # grading.py
 # ----------
-# Licensing Information:  You are free to use or extend these projects for
-# educational purposes provided that (1) you do not distribute or publish
-# solutions, (2) you retain this notice, and (3) you provide clear
-# attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-#
-# Attribution Information: The Pacman AI projects were developed at UC Berkeley.
-# The core projects and autograders were primarily created by John DeNero
-# (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
-# Student side autograding was added by Brad Miller, Nick Hay, and
-# Pieter Abbeel (pabbeel@cs.berkeley.edu).
+#许可信息:您可以出于教育目的自由使用或扩展这些项目,前提是
+# (1)您不散发或发布解决方案,
+# (2)您保留本声明,以及
+# (3)您提供明确的加州大学伯克利分校归属,包括指向 http://ai.berkeley.edu 的链接.
+# 
+# 归属信息:吃豆人AI项目是在加州大学伯克利分校开发的.
+# 核心项目和自动评分器主要由John DeNero(denero@cs.berkeley.edu)和Dan Klein(klein@cs.berkeley.edu)创建.
+# 学生端自动评分由Brad Miller、Nick Hay和Pieter Abbeel(pabbeel@cs.berkeley.edu)添加.
 
 
-"Common code for autograders"
+"自动评分器的通用代码"
 
 from html import escape
 import time
@@ -22,13 +20,13 @@ from collections import defaultdict
 import util
 
 class Grades:
-  "A data structure for project grades, along with formatting code to display them"
+  "一个用于项目成绩的数据结构,以及用于显示它们的格式化代码"
   def __init__(self, projectName, questionsAndMaxesList,
                gsOutput=False, edxOutput=False, muteOutput=False):
     """
-    Defines the grading scheme for a project
-      projectName: project name
-      questionsAndMaxesDict: a list of (question name, max points per question)
+    定义了项目的评分方案
+      projectName: 项目名称
+      questionsAndMaxesDict: (问题名称,每个问题的最高分数)列表
     """
     self.questions = [el[0] for el in questionsAndMaxesList]
     self.maxes = dict(questionsAndMaxesList)
@@ -36,28 +34,28 @@ class Grades:
     self.messages = dict([(q, []) for q in self.questions])
     self.project = projectName
     self.start = time.localtime()[1:6]
-    self.sane = True # Sanity checks
-    self.currentQuestion = None # Which question we're grading
+    self.sane = True # 合理性检查
+    self.currentQuestion = None # 我们正在评分的题目
     self.edxOutput = edxOutput
-    self.gsOutput = gsOutput  # GradeScope output
+    self.gsOutput = gsOutput  # GradeScope 输出
     self.mute = muteOutput
     self.prereqs = defaultdict(set)
 
     #print('Autograder transcript for %s' % self.project)
-    print('Starting on %d-%d at %d:%02d:%02d' % self.start)
+    print('从 %d-%d 开始,时间为 %d:%0.2d:%0.2d' % self.start)
 
   def addPrereq(self, question, prereq):
     self.prereqs[question].add(prereq)
 
   def grade(self, gradingModule, exceptionMap = {}, bonusPic = False):
     """
-    Grades each question
-      gradingModule: the module with all the grading functions (pass in with sys.modules[__name__])
+    为每个问题评分
+      gradingModule: 包含所有评分函数的模块(通过 sys.modules[__name__] 传入)
     """
 
     completedQuestions = set([])
     for q in self.questions:
-      print('\nQuestion %s' % q)
+      print('\n问题 %s' % q)
       print('=' * (9 + len(q)))
       print
       self.currentQuestion = q
@@ -66,41 +64,41 @@ class Grades:
       if len(incompleted) > 0:
           prereq = incompleted.pop()
           print(
-"""*** NOTE: Make sure to complete Question %s before working on Question %s,
-*** because Question %s builds upon your answer for Question %s.
+"""*** NOTE: 在处理问题%s之前,请确保完成问题 %s,
+*** 因为问题 %s 建立在问题 %s 的答案之上.
 """ % (prereq, q, q, prereq))
           continue
 
       if self.mute: util.mutePrint()
       try:
-        util.TimeoutFunction(getattr(gradingModule, q),1800)(self) # Call the question's function
-        #TimeoutFunction(getattr(gradingModule, q),1200)(self) # Call the question's function
+        util.TimeoutFunction(getattr(gradingModule, q),1800)(self) # 调用问题的函数
+        #TimeoutFunction(getattr(gradingModule, q),1200)(self) # 调用问题的函数
       except Exception as inst:
         self.addExceptionMessage(q, inst, traceback)
         self.addErrorHints(exceptionMap, inst, q[1])
       except:
-        self.fail('FAIL: Terminated with a string exception.')
+        self.fail('FAIL:以字符串异常终止.')
       finally:
         if self.mute: util.unmutePrint()
 
       if self.points[q] >= self.maxes[q]:
         completedQuestions.add(q)
 
-      print('\n### Question %s: %d/%d ###\n' % (q, self.points[q], self.maxes[q]))
+      print('\n### 问题 %s: %d/%d ###\n' % (q, self.points[q], self.maxes[q]))
 
 
-    print('\nFinished at %d:%02d:%02d' % time.localtime()[3:6])
-    print("\nProvisional grades\n==================")
+    print('\n完成时间 %d:%02d:%02d' % time.localtime()[3:6])
+    print("\n暂定等级\n==================")
 
     for q in self.questions:
-      print('Question %s: %d/%d' % (q, self.points[q], self.maxes[q]))
+      print('问题 %s: %d/%d' % (q, self.points[q], self.maxes[q]))
     print('------------------')
-    print('Total: %d/%d' % (self.points.totalCount(), sum(self.maxes.values())))
+    print('总: %d/%d' % (self.points.totalCount(), sum(self.maxes.values())))
     if bonusPic and self.points.totalCount() == 25:
       print("""
 
-                     ALL HAIL GRANDPAC.
-              LONG LIVE THE GHOSTBUSTING KING.
+                         万岁爷爷.
+                        捉鬼之王万岁.
 
                   ---      ----      ---
                   |  \    /  + \    /  |
@@ -130,8 +128,7 @@ class Grades:
 
 """)
     print("""
-Your grades are NOT yet registered.  To register your grades, make sure
-to follow your instructor's guidelines to receive credit on your project.
+您的成绩尚未注册.要注册您的成绩,请确保遵循您的讲师的指南以获得项目学分.
 """)
 
     if self.edxOutput:
@@ -141,10 +138,9 @@ to follow your instructor's guidelines to receive credit on your project.
 
   def addExceptionMessage(self, q, inst, traceback):
     """
-    Method to format the exception message, this is more complicated because
-    we need to escape the traceback but wrap the exception in a <pre> tag
+    格式化异常消息的方法,这更复杂,因为我们需要转义跟踪回溯,但将异常包装在 <pre> 标签中
     """
-    self.fail('FAIL: Exception raised: %s' % inst)
+    self.fail('FAIL:引发异常: %s' % inst)
     self.addMessage('')
     for line in traceback.format_exc().split('\n'):
         self.addMessage(line)
@@ -154,17 +150,16 @@ to follow your instructor's guidelines to receive credit on your project.
     questionName = 'q' + questionNum
     errorHint = ''
 
-    # question specific error hints
+    # 特定于问题的错误提示
     if exceptionMap.get(questionName):
       questionMap = exceptionMap.get(questionName)
       if (questionMap.get(typeOf)):
         errorHint = questionMap.get(typeOf)
-    # fall back to general error messages if a question specific
-    # one does not exist
+    # 如果不存在特定问题的错误消息,则回退到一般错误消息
     if (exceptionMap.get(typeOf)):
       errorHint = exceptionMap.get(typeOf)
 
-    # dont include the HTML if we have no error hint
+    # 如果没有错误提示,则不包含 HTML
     if not errorHint:
       return ''
 
@@ -174,25 +169,25 @@ to follow your instructor's guidelines to receive credit on your project.
   def produceGradeScopeOutput(self):
     out_dct = {}
 
-    # total of entire submission
+    # 整个提交的总分
     total_possible = sum(self.maxes.values())
     total_score = sum(self.points.values())
     out_dct['score'] = total_score
     out_dct['max_score'] = total_possible
-    out_dct['output'] = "Total score (%d / %d)" % (total_score, total_possible)
+    out_dct['output'] = "总分 (%d / %d)" % (total_score, total_possible)
 
-    # individual tests
+    # 个人测试
     tests_out = []
     for name in self.questions:
       test_out = {}
-      # test name
+      # 测试名称
       test_out['name'] = name
-      # test score
+      # 考试成绩
       test_out['score'] = self.points[name]
       test_out['max_score'] = self.maxes[name]
-      # others
+      # 别人
       is_correct = self.points[name] >= self.maxes[name]
-      test_out['output'] = "  Question {num} ({points}/{max}) {correct}".format(
+      test_out['output'] = "  问题 {num} ({points}/{max}) {correct}".format(
           num=(name[1] if len(name) == 2 else name),
           points=test_out['score'],
           max=test_out['max_score'],
@@ -202,7 +197,7 @@ to follow your instructor's guidelines to receive credit on your project.
       tests_out.append(test_out)
     out_dct['tests'] = tests_out
 
-    # file output
+    # 文件输出
     with open('gradescope_response.json', 'w') as outfile:
         json.dump(out_dct, outfile)
     return
@@ -211,7 +206,7 @@ to follow your instructor's guidelines to receive credit on your project.
     edxOutput = open('edx_response.html', 'w')
     edxOutput.write("<div>")
 
-    # first sum
+    # 第一次求和
     total_possible = sum(self.maxes.values())
     total_score = sum(self.points.values())
     checkOrX = '<span class="incorrect"/>'
@@ -219,7 +214,7 @@ to follow your instructor's guidelines to receive credit on your project.
         checkOrX = '<span class="correct"/>'
     header = """
         <h3>
-            Total score ({total_score} / {total_possible})
+            总分 ({total_score} / {total_possible})
         </h3>
     """.format(total_score = total_score,
       total_possible = total_possible,
@@ -254,7 +249,7 @@ to follow your instructor's guidelines to receive credit on your project.
         checkOrX = checkOrX,
         points = self.points[q]
       )
-      # print("*** output for Question %s " % q[1])
+      # print("*** 问题的输出 %s " % q[1])
       # print(output)
       edxOutput.write(output)
     edxOutput.write("</div>")
@@ -264,7 +259,7 @@ to follow your instructor's guidelines to receive credit on your project.
     edxOutput.close()
 
   def fail(self, message, raw=False):
-    "Sets sanity check bit to false and outputs a message"
+    "将健全性检查位设置为 false 并输出一条消息"
     self.sane = False
     self.assignZeroCredit()
     self.addMessage(message, raw)
@@ -285,7 +280,7 @@ to follow your instructor's guidelines to receive credit on your project.
 
   def addMessage(self, message, raw=False):
     if not raw:
-        # We assume raw messages, formatted for HTML, are printed separately
+        # 我们假设以 HTML 格式化的原始消息是单独打印的
         if self.mute: util.unmutePrint()
         print('*** ' + message)
         if self.mute: util.mutePrint()
@@ -293,7 +288,7 @@ to follow your instructor's guidelines to receive credit on your project.
     self.messages[self.currentQuestion].append(message)
 
   def addMessageToEmail(self, message):
-    print("WARNING**** addMessageToEmail is deprecated %s" % message)
+    print("WARNING**** addMessageToEmail 已弃用 %s" % message)
     for line in message.split('\n'):
       pass
       #print('%%% ' + line + ' %%%')
@@ -305,7 +300,7 @@ to follow your instructor's guidelines to receive credit on your project.
 
 class Counter(dict):
   """
-  Dict with default 0
+  默认为 0 的 Dict
   """
   def __getitem__(self, idx):
     try:
@@ -315,6 +310,6 @@ class Counter(dict):
 
   def totalCount(self):
     """
-    Returns the sum of counts for all keys.
+    返回所有键的计数总和.
     """
     return sum(self.values())

@@ -1,29 +1,25 @@
 # util.py
 # -------
-# Licensing Information:  You are free to use or extend these projects for
-# educational purposes provided that (1) you do not distribute or publish
-# solutions, (2) you retain this notice, and (3) you provide clear
-# attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
+#许可信息:您可以出于教育目的自由使用或扩展这些项目,前提是
+# (1)您不散发或发布解决方案,
+# (2)您保留本声明,以及
+# (3)您提供明确的加州大学伯克利分校归属,包括指向 http://ai.berkeley.edu 的链接.
 # 
-# Attribution Information: The Pacman AI projects were developed at UC Berkeley.
-# The core projects and autograders were primarily created by John DeNero
-# (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
-# Student side autograding was added by Brad Miller, Nick Hay, and
-# Pieter Abbeel (pabbeel@cs.berkeley.edu).
+# 归属信息:吃豆人AI项目是在加州大学伯克利分校开发的.
+# 核心项目和自动评分器主要由John DeNero(denero@cs.berkeley.edu)和Dan Klein(klein@cs.berkeley.edu)创建.
+# 学生端自动评分由Brad Miller、Nick Hay和Pieter Abbeel(pabbeel@cs.berkeley.edu)添加.
 
 
 # util.py
 # -------
-# Licensing Information:  You are free to use or extend these projects for
-# educational purposes provided that (1) you do not distribute or publish
-# solutions, (2) you retain this notice, and (3) you provide clear
-# attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
+#许可信息:您可以出于教育目的自由使用或扩展这些项目,前提是
+# (1)您不散发或发布解决方案,
+# (2)您保留本声明,以及
+# (3)您提供明确的加州大学伯克利分校归属,包括指向 http://ai.berkeley.edu 的链接.
 # 
-# Attribution Information: The Pacman AI projects were developed at UC Berkeley.
-# The core projects and autograders were primarily created by John DeNero
-# (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
-# Student side autograding was added by Brad Miller, Nick Hay, and
-# Pieter Abbeel (pabbeel@cs.berkeley.edu).
+# 归属信息:吃豆人AI项目是在加州大学伯克利分校开发的.
+# 核心项目和自动评分器主要由John DeNero(denero@cs.berkeley.edu)和Dan Klein(klein@cs.berkeley.edu)创建.
+# 学生端自动评分由Brad Miller、Nick Hay和Pieter Abbeel(pabbeel@cs.berkeley.edu)添加.
 
 
 import sys
@@ -127,52 +123,52 @@ class FixedRandom:
         self.random.setstate(fixedState)
 
 """
- Data structures useful for implementing SearchAgents
+ 可用于实现 SearchAgents 的数据结构
 """
 
 class Stack:
-    "A container with a last-in-first-out (LIFO) queuing policy."
+    "具有后进先出 (LIFO) 栈策略的容器."
     def __init__(self):
         self.list = []
 
     def push(self,item):
-        "Push 'item' onto the stack"
+        "将“item”推到堆栈上"
         self.list.append(item)
 
     def pop(self):
-        "Pop the most recently pushed item from the stack"
+        "从堆栈中弹出最近推送的项目"
         return self.list.pop()
 
     def isEmpty(self):
-        "Returns true if the stack is empty"
+        "如果堆栈为空,则返回 true"
         return len(self.list) == 0
 
 class Queue:
-    "A container with a first-in-first-out (FIFO) queuing policy."
+    "A 具有先进先出 (FIFO) 队列策略的容器."
     def __init__(self):
         self.list = []
 
     def push(self,item):
-        "Enqueue the 'item' into the queue"
+        "将“item”排队到队列中"
         self.list.insert(0,item)
 
     def pop(self):
         """
-          Dequeue the earliest enqueued item still in the queue. This
-          operation removes the item from the queue.
+          将仍在队列中的最早排队项取消排队.这
+          操作从队列中删除项目.
         """
         return self.list.pop()
 
     def isEmpty(self):
-        "Returns true if the queue is empty"
+        "如果队列为空,则返回 true"
         return len(self.list) == 0
 
 class PriorityQueue:
     """
-      Implements a priority queue data structure. Each inserted item
-      has a priority associated with it and the client is usually interested
-      in quick retrieval of the lowest-priority item in the queue. This
-      data structure allows O(1) access to the lowest-priority item.
+      实现优先级队列数据结构.每个插入的项目
+      具有与之相关的优先级,并且客户通常感兴趣
+      快速检索队列中优先级最低的项.这
+      数据结构允许 O(1) 访问优先级最低的项目.
     """
     def  __init__(self):
         self.heap = []
@@ -191,9 +187,9 @@ class PriorityQueue:
         return len(self.heap) == 0
 
     def update(self, item, priority):
-        # If item already in priority queue with higher priority, update its priority and rebuild the heap.
-        # If item already in priority queue with equal or lower priority, do nothing.
-        # If item not in priority queue, do the same thing as self.push.
+        # 如果项目已在优先级队列中具有更高的优先级,请更新其优先级并重新构建堆.
+        # 如果优先级队列中已有具有相同或较低优先级的项目,则不执行任何操作.
+        # 如果项目不在优先级队列中,请执行与 self.push 相同的操作.
         for index, (p, c, i) in enumerate(self.heap):
             if i == item:
                 if p <= priority:
@@ -207,70 +203,69 @@ class PriorityQueue:
 
 class PriorityQueueWithFunction(PriorityQueue):
     """
-    Implements a priority queue with the same push/pop signature of the
-    Queue and the Stack classes. This is designed for drop-in replacement for
-    those two classes. The caller has to provide a priority function, which
-    extracts each item's priority.
+    实现具有相同推送/弹出签名的优先级队列
+    Queue 和 Stack 类.这是为直接替换而设计的
+    这两个类.调用方必须提供优先级函数,该函数
+    提取每个项目的优先级.
     """
     def  __init__(self, priorityFunction):
         "priorityFunction (item) -> priority"
-        self.priorityFunction = priorityFunction      # store the priority function
-        PriorityQueue.__init__(self)        # super-class initializer
+        self.priorityFunction = priorityFunction      # 存储优先级函数
+        PriorityQueue.__init__(self)        # 超类初始值设定项
 
     def push(self, item):
-        "Adds an item to the queue with priority from the priority function"
+        "从优先级函数中将具有优先级的项目添加到队列中"
         PriorityQueue.push(self, item, self.priorityFunction(item))
 
 
 def manhattanDistance( xy1, xy2 ):
-    "Returns the Manhattan distance between points xy1 and xy2"
+    "返回点 xy1 和 xy2 之间的曼哈顿距离"
     return abs( xy1[0] - xy2[0] ) + abs( xy1[1] - xy2[1] )
 
 """
-  Data structures and functions useful for various course projects
+  对各种课程项目有用的数据结构和函数
 
-  The search project should not need anything below this line.
+搜索项目不需要此行以下的任何内容.
 """
 
 class Counter(dict):
     """
-    A counter keeps track of counts for a set of keys.
+    计数器跟踪一组键的计数.
 
-    The counter class is an extension of the standard python
-    dictionary type.  It is specialized to have number values
-    (integers or floats), and includes a handful of additional
-    functions to ease the task of counting data.  In particular,
-    all keys are defaulted to have value 0.  Using a dictionary:
-
+    counter 类是标准 python 的扩展
+    字典类型. 它专门具有数字值
+    (整数或浮点数),并包含一些额外的
+    函数,以简化数据计数任务. 特别
+    默认情况下,所有键的值均为 0. 使用字典:
     a = {}
     print(a['test'])
 
-    would give an error, while the Counter class analogue:
+    会给出一个错误,而 Counter 类类似物:
 
     >>> a = Counter()
     >>> print(a['test'])
     0
 
-    returns the default 0 value. Note that to reference a key
-    that you know is contained in the counter,
-    you can still use the dictionary syntax:
+    返回默认值 0.请注意,要引用密钥
+    你知道包含在计数器中,
+    您仍然可以使用字典语法:
 
     >>> a = Counter()
     >>> a['test'] = 2
     >>> print(a['test'])
     2
 
-    This is very useful for counting things without initializing their counts,
-    see for example:
+    这对于在不初始化计数的情况下计数事物非常有用,
+    例如,请参阅:
 
     >>> a['blah'] += 1
     >>> print(a['blah'])
     1
 
-    The counter also includes additional functionality useful in implementing
-    the classifiers for this assignment.  Two counters can be added,
-    subtracted or multiplied together.  See below for details.  They can
-    also be normalized and their total count and arg max can be extracted.
+    该计数器还包括用于实现的附加功能
+    此作业的分类器. 可以添加两个计数器,
+    一起减去或乘以. 有关详细信息,请参见下文. 他们可以
+    也可以归一化,并且可以提取其总数和 arg max.
     """
     def __getitem__(self, idx):
         self.setdefault(idx, 0)
@@ -278,8 +273,7 @@ class Counter(dict):
 
     def incrementAll(self, keys, count):
         """
-        Increments all elements of keys by the same count.
-
+        按相同的计数递增键的所有元素.
         >>> a = Counter()
         >>> a.incrementAll(['one','two', 'three'], 1)
         >>> a['one']
@@ -292,7 +286,7 @@ class Counter(dict):
 
     def argMax(self):
         """
-        Returns the key with the highest value.
+        返回具有最高值的键.
         """
         if len(self.keys()) == 0: return None
         all = self.items()
@@ -302,8 +296,8 @@ class Counter(dict):
 
     def sortedKeys(self):
         """
-        Returns a list of keys sorted by their values.  Keys
-        with the highest values will appear first.
+        返回按其值排序的键列表. 键
+        最高值将首先出现.
 
         >>> a = Counter()
         >>> a['first'] = -2
@@ -319,16 +313,16 @@ class Counter(dict):
 
     def totalCount(self):
         """
-        Returns the sum of counts for all keys.
+        返回所有键的计数总和.
         """
         return sum(self.values())
 
     def normalize(self):
         """
-        Edits the counter such that the total count of all
-        keys sums to 1.  The ratio of counts for all keys
-        will remain the same. Note that normalizing an empty
-        Counter will result in an error.
+        编辑计数器,使所有计数器的总数
+        键的总和为 1. 所有键的计数比率
+        将保持不变.请注意,规范化空
+        计数器将导致错误.
         """
         total = float(self.totalCount())
         if total == 0: return
@@ -337,7 +331,7 @@ class Counter(dict):
 
     def divideAll(self, divisor):
         """
-        Divides all counts by divisor
+        将所有计数除以除数
         """
         divisor = float(divisor)
         for key in self:
@@ -345,15 +339,14 @@ class Counter(dict):
 
     def copy(self):
         """
-        Returns a copy of the counter
+        返回计数器的副本
         """
         return Counter(dict.copy(self))
 
     def __mul__(self, y ):
         """
-        Multiplying two counters gives the dot product of their vectors where
-        each unique label is a vector element.
-
+        将两个计数器相乘得到其向量的点积,其中
+        每个唯一的标签都是一个矢量元素.
         >>> a = Counter()
         >>> b = Counter()
         >>> a['first'] = -2
@@ -377,8 +370,8 @@ class Counter(dict):
 
     def __radd__(self, y):
         """
-        Adding another counter to a counter increments the current counter
-        by the values stored in the second counter.
+        向计数器添加另一个计数器会递增当前计数器
+        通过存储在第二个计数器中的值.
 
         >>> a = Counter()
         >>> b = Counter()
@@ -395,8 +388,8 @@ class Counter(dict):
 
     def __add__( self, y ):
         """
-        Adding two counters gives a counter with the union of all keys and
-        counts of the second added to counts of the first.
+        添加两个计数器会得到一个包含所有键和
+        第二个的计数添加到第一个的计数中.
 
         >>> a = Counter()
         >>> b = Counter()
@@ -421,8 +414,8 @@ class Counter(dict):
 
     def __sub__( self, y ):
         """
-        Subtracting a counter from another gives a counter with the union of all keys and
-        counts of the second subtracted from counts of the first.
+        从另一个计数器中减去一个计数器,得到一个所有键并集的计数器,并且
+        第二个的计数从第一个的计数中减去.
 
         >>> a = Counter()
         >>> b = Counter()
@@ -450,12 +443,12 @@ def raiseNotDefined():
     line = inspect.stack()[1][2]
     method = inspect.stack()[1][3]
 
-    print("*** Method not implemented: %s at line %s of %s" % (method, line, fileName))
+    print("*** 方法未实现: %s at line %s of %s" % (method, line, fileName))
     sys.exit(1)
 
 def normalize(vectorOrCounter):
     """
-    normalize a vector or counter by dividing each value by the sum of all values
+    通过将每个值除以所有值的总和来规范向量或计数器
     """
     normalizedCounter = Counter()
     if type(vectorOrCounter) == type(normalizedCounter):
@@ -508,8 +501,8 @@ def sampleFromCounter(ctr):
 
 def getProbability(value, distribution, values):
     """
-      Gives the probability of a value under a discrete distribution
-      defined by (distributions, values).
+      给出离散分布下值的概率
+      定义者 (分布, 值).
     """
     total = 0.0
     for prob, val in zip(distribution, values):
@@ -522,7 +515,7 @@ def flipCoin( p ):
     return r < p
 
 def chooseFromDistribution( distribution ):
-    "Takes either a counter or a list of (prob, key) pairs and samples"
+    "采用计数器或(prob,key)对和样本的列表"
     if type(distribution) == dict or type(distribution) == Counter:
         return sample(distribution)
     r = random.random()
@@ -533,7 +526,7 @@ def chooseFromDistribution( distribution ):
 
 def nearestPoint( pos ):
     """
-    Finds the nearest grid point to a position (discretizes).
+    查找离某个位置最近的网格点(离散化).
     """
     ( current_row, current_col ) = pos
 
@@ -543,7 +536,7 @@ def nearestPoint( pos ):
 
 def sign( x ):
     """
-    Returns 1 or -1 depending on the sign of x
+    返回 1 或 -1,具体取决于 x 的符号
     """
     if( x >= 0 ):
         return 1
@@ -552,7 +545,7 @@ def sign( x ):
 
 def arrayInvert(array):
     """
-    Inverts a matrix stored as a list of lists.
+    反转存储为列表列表的矩阵.
     """
     result = [[] for i in array]
     for outer in array:
@@ -562,7 +555,7 @@ def arrayInvert(array):
 
 def matrixAsList( matrix, value = True ):
     """
-    Turns a matrix into a list of coordinates matching the specified value
+    将矩阵转换为与指定值匹配的坐标列表
     """
     rows, cols = len( matrix ), len( matrix[0] )
     cells = []
@@ -574,8 +567,8 @@ def matrixAsList( matrix, value = True ):
 
 def lookup(name, namespace):
     """
-    Get a method or class from any imported module from its name.
-    Usage: lookup(functionName, globals())
+    从任何导入的模块中获取方法或类的名称.
+    用法:lookup(functionName, globals())
     """
     dots = name.count('.')
     if dots > 0:
@@ -592,23 +585,22 @@ def lookup(name, namespace):
 
 def pause():
     """
-    Pauses the output stream awaiting user feedback.
+    暂停输出流等待用户反馈.
     """
-    input("<Press enter/return to continue>")
+    input("<按回车键继续>")
 
 
-# code to handle timeouts
+# 用于处理超时的代码
 #
 # FIXME
-# NOTE: TimeoutFuncton is NOT reentrant.  Later timeouts will silently
-# disable earlier timeouts.  Could be solved by maintaining a global list
-# of active time outs.  Currently, questions which have test cases calling
-# this have all student code so wrapped.
+# NOTE: TimeoutFunction不是可重入的.后续的超时将静默地禁用先前的超时.
+# 这个问题可以通过维护一个全局的活动超时列表来解决.
+# 目前,调用此函数的测试用例所对应的问题都包含了所有学生代码的包装.
 #
 import signal
 import time
 class TimeoutFunctionException(Exception):
-    """Exception to raise on a timeout"""
+    """超时引发异常"""
     pass
 
 
@@ -621,9 +613,8 @@ class TimeoutFunction:
         raise TimeoutFunctionException()
 
     def __call__(self, *args, **keyArgs):
-        # If we have SIGALRM signal, use it to cause an exception if and
-        # when this function runs too long.  Otherwise check the time taken
-        # after the method has returned, and throw an exception then.
+        # 如果我们有SIGALRM信号,可以使用它来在该函数运行时间过长时引发异常.
+        # 否则,在方法返回后检查所花费的时间,并在那时抛出异常.
         if hasattr(signal, 'SIGALRM'):
             old = signal.signal(signal.SIGALRM, self.handle_timeout)
             signal.alarm(self.timeout)

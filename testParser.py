@@ -1,15 +1,13 @@
 # testParser.py
 # -------------
-# Licensing Information:  You are free to use or extend these projects for
-# educational purposes provided that (1) you do not distribute or publish
-# solutions, (2) you retain this notice, and (3) you provide clear
-# attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
+#许可信息:您可以出于教育目的自由使用或扩展这些项目,前提是
+# (1)您不散发或发布解决方案,
+# (2)您保留本声明,以及
+# (3)您提供明确的加州大学伯克利分校归属,包括指向 http://ai.berkeley.edu 的链接.
 # 
-# Attribution Information: The Pacman AI projects were developed at UC Berkeley.
-# The core projects and autograders were primarily created by John DeNero
-# (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
-# Student side autograding was added by Brad Miller, Nick Hay, and
-# Pieter Abbeel (pabbeel@cs.berkeley.edu).
+# 归属信息:吃豆人AI项目是在加州大学伯克利分校开发的.
+# 核心项目和自动评分器主要由John DeNero(denero@cs.berkeley.edu)和Dan Klein(klein@cs.berkeley.edu)创建.
+# 学生端自动评分由Brad Miller、Nick Hay和Pieter Abbeel(pabbeel@cs.berkeley.edu)添加.
 
 
 import re
@@ -18,11 +16,11 @@ import sys
 class TestParser(object):
 
     def __init__(self, path):
-        # save the path to the test file
+        # 保存测试文件的路径
         self.path = path
 
     def removeComments(self, rawlines):
-        # remove any portion of a line following a '#' symbol
+        # 删除“#”符号后面的行的任何部分
         fixed_lines = []
         for l in rawlines:
             idx = l.find('#')
@@ -33,7 +31,7 @@ class TestParser(object):
         return '\n'.join(fixed_lines)
 
     def parse(self):
-        # read in the test case and remove comments
+        # 在测试用例中读取并删除注释
         test = {}
         with open(self.path) as handle:
             raw_lines = handle.read().split('\n')
@@ -44,9 +42,9 @@ class TestParser(object):
         test['__emit__'] = []
         lines = test_text.split('\n')
         i = 0
-        # read a property in each loop cycle
+        # 在每个循环周期中读取一个属性
         while(i < len(lines)):
-            # skip blank lines
+            # 跳过空行
             if re.match('\A\s*\Z', lines[i]):
                 test['__emit__'].append(("raw", raw_lines[i]))
                 i += 1
