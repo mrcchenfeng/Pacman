@@ -443,7 +443,7 @@ def raiseNotDefined():
     line = inspect.stack()[1][2]
     method = inspect.stack()[1][3]
 
-    print("*** 方法未实现: %s at line %s of %s" % (method, line, fileName))
+    print("*** 方法未实现: {2}第{1}行的{0}".format(method, line, fileName))
     sys.exit(1)
 
 def normalize(vectorOrCounter):
