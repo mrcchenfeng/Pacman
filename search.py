@@ -109,6 +109,21 @@ def breadthFirstSearch(problem: SearchProblem):
     """ BFS
     首先在搜索树中搜索最浅的节点."""
     "*** 您的代码在这里 ***"
+    queue = util.Queue()
+    queue.push((problem.getStartState(), []))
+    visited = set()
+    while not queue.isEmpty():
+        current_state, path = queue.pop()
+        if problem.isGoalState(current_state):
+            return path
+        if current_state in visited:
+            continue
+        visited.add(current_state)
+        for successors in problem.getSuccessors(current_state):
+            succerror, active, _ = successors
+            queue.push((succerror, path + [active]))
+    return []
+
     util.raiseNotDefined()
 
 def uniformCostSearch(problem: SearchProblem):
