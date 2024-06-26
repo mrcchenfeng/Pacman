@@ -129,6 +129,20 @@ def breadthFirstSearch(problem: SearchProblem):
 def uniformCostSearch(problem: SearchProblem):
     """首先搜索总成本最低的节点."""
     "*** 您的代码在这里 ***"
+    priority = util.PriorityQueue()
+    priority.update((problem.getStartState(), []), 1)
+    visited = set()
+    while not priority.isEmpty():
+        current_state, path = priority.pop()
+        if problem.isGoalState(current_state):
+            return path
+        if current_state in visited:
+            continue
+        visited.add(current_state)
+        for successors in problem.getSuccessors(current_state):
+            succerror, active, _ = successors
+            priority.update((succerror, path + [active]), problem.getCostOfActions(path + [active]))
+    return []
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
